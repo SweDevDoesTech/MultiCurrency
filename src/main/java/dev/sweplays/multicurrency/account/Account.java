@@ -2,6 +2,7 @@ package dev.sweplays.multicurrency.account;
 
 import dev.sweplays.multicurrency.MultiCurrency;
 import dev.sweplays.multicurrency.currency.Currency;
+import dev.sweplays.multicurrency.utilities.Messages;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -26,7 +27,7 @@ public class Account {
         if (hasEnough(currency, amount)) {
             double finalAmount = getBalance(currency) - amount;
             updateBalance(currency, finalAmount, true);
-            MultiCurrency.getInstance().getLogger().info();
+            MultiCurrency.getInstance().getLogger().info(Messages.CURRENCY_ADD_SUCCESS.get());
         }
     }
 

@@ -1,0 +1,6 @@
+name: MultiCurrency
+version: '${project.version}'
+main: dev.sweplays.multicurrency.MultiCurrency
+api-version: 1.19
+authors: [ SweplaysYT ]
+description: A multi-currency plugin made by love by SweplaysYT 

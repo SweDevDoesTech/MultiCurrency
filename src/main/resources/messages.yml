@@ -1,0 +1,11 @@
+plugin:
+  prefix: "&fMulti&6Currency &7>"
+
+currency:
+  add:
+    success: " &aSuccessfully added {amount} of {currency} to {player}'s account."
+    success_target: " &a{player} added {amount} of {currency} to your account."
+
+  remove:
+    success: " &aSuccessfully removed {amount} of {currency} to {player}'s account."
+    success_target: " &c{player} removed {amount} of {currency} from your account."

@@ -4,6 +4,9 @@ import dev.sweplays.multicurrency.MultiCurrency;
 import dev.sweplays.multicurrency.currency.Currency;
 import dev.sweplays.multicurrency.utilities.Messages;
 import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,17 +15,27 @@ import java.util.UUID;
 public class Account {
 
     @Getter
-    private UUID ownerUuid;
+    private final UUID ownerUuid;
+
+    @Setter
+    @Getter
+    private String ownerName;
+
+    @Getter
+    @Setter
+    private boolean acceptingPayments = true;
 
     @Getter
     private final Map<Currency, Double> balances;
 
-    public Account(UUID ownerUuid) {
+    public Account(UUID ownerUuid, String ownerName) {
         this.ownerUuid = ownerUuid;
+        this.ownerName = ownerName;
 
         balances = new HashMap<>();
     }
 
+    /*
     public void withdraw(Currency currency, Double amount) {
         if (hasEnough(currency, amount)) {
             double finalAmount = getBalance(currency) - amount;
@@ -30,18 +43,37 @@ public class Account {
             MultiCurrency.getInstance().getLogger().info(Messages.CURRENCY_ADD_SUCCESS.get());
         }
     }
+     */
 
-    public boolean hasEnough(Currency currency, Double amount) {
+    public void add(Currency currency, double amount) {
+        double finalAmount = getBalance(currency) + amount;
+        updateBalance(currency, finalAmount, true);
+    }
+
+    public void remove(Currency currency, double amount) {
+        double finalAmount = getBalance(currency) - amount;
+        updateBalance(currency, finalAmount, true);
+    }
+
+
+    public boolean hasEnough(Currency currency, double amount) {
         return getBalance(currency) >= amount;
     }
 
-    public Double getBalance(Currency currency) {
-        return balances.get(currency);
+    public double getBalance(Currency currency) {
+        return getBalances().get(currency);
+    }
+
+    public double getBalance(String name) {
+        for (Currency currency : getBalances().keySet())
+            if (currency.getName().equals(name))
+                return getBalances().get(currency);
+        return 0;
     }
 
     public void updateBalance(Currency currency, double amount, boolean save) {
-        balances.put(currency, amount);
+        getBalances().put(currency, amount);
         if (save)
-            MultiCurrency.getAccountManager().saveAccount();
+            MultiCurrency.getDataStore().saveAccount(this);
     }
 }

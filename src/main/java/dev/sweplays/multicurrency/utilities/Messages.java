@@ -6,9 +6,12 @@ public enum Messages {
 
     PREFIX("plugin.prefix"),
 
-    CURRENCY_ADD_SUCCESS("currency.add.success")
+    CURRENCY_ADD_SUCCESS("currency.add.success"),
+    CURRENCY_ADD_SUCCESS_TARGET("currency.add.success_target"),
+
+    CURRENCY_REMOVE_SUCCESS("currency.remove.success"),
+    CURRENCY_REMOVE_SUCCESS_TARGET("currency.remove.success_target"),
     ;
-    //CURRENCY_ADD_SUCCESS("&r&lMulti&6&lCurrency &7> &aSuccessfully added %amount% of %currency% to %player%'s account.");
 
     private final String path;
 

@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="MultiCurrency-2" target="1.8" />
+      <module name="MultiCurrency-2" target="16" />
     </bytecodeTargetLevel>
   </component>
 </project>

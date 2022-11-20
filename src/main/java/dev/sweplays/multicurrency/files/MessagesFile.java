@@ -22,9 +22,9 @@ public class MessagesFile {
     public MessagesFile() {
         file = new File(MultiCurrency.getInstance().getDataFolder(), "messages.yml");
         yamlConfiguration = new YamlConfiguration();
-        fileConfiguration.getDefaults();
 
         if (!file.exists()) {
+            MultiCurrency.getInstance().saveResource("messages.yml", false);
             file.getParentFile().mkdirs();
             try {
                 file.createNewFile();

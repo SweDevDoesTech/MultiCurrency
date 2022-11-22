@@ -16,7 +16,7 @@ import java.util.List;
 
 public class Inventory_EditBalance {
 
-    AnvilGUI.Builder anvilGui;
+    final AnvilGUI.Builder anvilGui;
 
     public Inventory_EditBalance(InventoryType type, Account account, Currency currency) {
         anvilGui = new AnvilGUI.Builder();

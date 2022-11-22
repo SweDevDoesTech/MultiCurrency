@@ -6,11 +6,28 @@ public enum Messages {
 
     PREFIX("plugin.prefix"),
 
-    CURRENCY_ADD_SUCCESS("currency.add.success"),
-    CURRENCY_ADD_SUCCESS_TARGET("currency.add.success_target"),
+    NO_DEFAULT_CURRENCY("currency.no-default-currency"),
 
-    CURRENCY_REMOVE_SUCCESS("currency.remove.success"),
-    CURRENCY_REMOVE_SUCCESS_TARGET("currency.remove.success_target"),
+    NO_PERMISSION("plugin.no-permission"),
+
+    ADD_SUCCESS("currency.add.success"),
+    ADD_SUCCESS_NO_TARGET("currency.add.success-no-target"),
+    ADD_SUCCESS_TARGET("currency.add.success-target"),
+
+    SET_SUCCESS("currency.set.success"),
+    SET_SUCCESS_NO_TARGET("currency.set.success-no-target"),
+    SET_SUCCESS_TARGET("currency.set.success-target"),
+
+    REMOVE_SUCCESS("currency.remove.success"),
+    REMOVE_SUCCESS_NO_TARGET("currency.remove.success-no-target"),
+    REMOVE_SUCCESS_TARGET("currency.remove.success-target"),
+
+    PAY_SUCCESS("currency.pay.success"),
+    PAY_SUCCESS_TARGET("currency.pay.success-target"),
+    PAY_ERROR("currency.pay.error"),
+    PAY_NOT_ENOUGH("currency.pay.not-enough"),
+
+    BALANCE("currency.balance"),
     ;
 
     private final String path;

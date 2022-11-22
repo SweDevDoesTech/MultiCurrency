@@ -10,7 +10,10 @@ import java.util.Map;
 public class InventoryCache {
 
     @Getter
-    private final Map<Player, String> currencyName;
+    private final Map<Player, String> currencySingular;
+
+    @Getter
+    private final Map<Player, String> currencyPlural;
 
     @Getter
     private final Map<Player, String> symbol;
@@ -28,7 +31,8 @@ public class InventoryCache {
     private final Map<Player, Material> material;
 
     public InventoryCache() {
-        currencyName = new HashMap<>();
+        currencySingular = new HashMap<>();
+        currencyPlural = new HashMap<>();
         symbol = new HashMap<>();
         defaultBalance = new HashMap<>();
         payable = new HashMap<>();
@@ -37,7 +41,8 @@ public class InventoryCache {
     }
 
     public void clearCache(Player player) {
-        getCurrencyName().remove(player);
+        getCurrencySingular().remove(player);
+        getCurrencyPlural().remove(player);
         getSymbol().remove(player);
         getDefaultBalance().remove(player);
         getPayable().remove(player);

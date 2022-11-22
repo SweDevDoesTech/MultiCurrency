@@ -16,7 +16,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Inventory_PlayerCurrencyList {
@@ -33,15 +32,9 @@ public class Inventory_PlayerCurrencyList {
     public Inventory_PlayerCurrencyList(Account account) {
         this.account = account;
 
-        gui.setDefaultTopClickAction(event -> {
-            event.setCancelled(true);
-        });
+        gui.setDefaultTopClickAction(event -> event.setCancelled(true));
 
-        gui.setCloseGuiAction(event -> {
-            SchedulerUtils.runLater(1L, () -> {
-                new Inventory_UpdatePlayer(account).openInventory((Player) event.getPlayer());
-            });
-        });
+        gui.setCloseGuiAction(event -> SchedulerUtils.runLater(1L, () -> new Inventory_UpdatePlayer(account).openInventory((Player) event.getPlayer())));
 
         gui.setItem(6, 3, ItemBuilder.from(Material.PAPER).setName(Utils.colorize("&b&lPrevious Page")).asGuiItem());
         gui.setItem(6, 7, ItemBuilder.from(Material.PAPER).setName(Utils.colorize("&b&lNext Page")).asGuiItem());
@@ -56,12 +49,10 @@ public class Inventory_PlayerCurrencyList {
                 gui.setCloseGuiAction(event1 -> {
                 });
 
-                SchedulerUtils.runLater(1L, () -> {
-                    new Inventory_PlayerBalanceEditOptions(currency, account).openInventory((Player) event.getWhoClicked());
-                });
+                SchedulerUtils.runLater(1L, () -> new Inventory_PlayerBalanceEditOptions(currency, account).openInventory((Player) event.getWhoClicked()));
             }));
             ItemMeta currencyItemMeta = currencyItems.get(index).getItemStack().getItemMeta();
-            currencyItemMeta.setDisplayName(Utils.colorize("&7" + currency.getName()));
+            currencyItemMeta.setDisplayName(Utils.colorize("&7" + currency.getSingular()));
             currencyItems.get(index).getItemStack().setItemMeta(currencyItemMeta);
 
             gui.addItem(currencyItems.get(index));
@@ -70,11 +61,7 @@ public class Inventory_PlayerCurrencyList {
     }
 
     public void openInventory(Player player) {
-        gui.setCloseGuiAction(event -> {
-            SchedulerUtils.runLater(1L, () -> {
-                new Inventory_UpdatePlayer(account).openInventory(player);
-            });
-        });
+        gui.setCloseGuiAction(event -> SchedulerUtils.runLater(1L, () -> new Inventory_UpdatePlayer(account).openInventory(player)));
         gui.open(player);
     }
 }

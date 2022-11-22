@@ -14,7 +14,7 @@ public abstract class DataStore {
     public final MultiCurrency plugin = MultiCurrency.getInstance();
 
     @Getter
-    private String name;
+    private final String name;
 
     public DataStore(String name) {
         this.name = name;
@@ -42,13 +42,11 @@ public abstract class DataStore {
 
     public abstract void loadCurrencies();
 
-    public abstract Account returnAccountWithBalances(Account account);
+    public abstract void deleteCurrency(Currency currency);
 
     public abstract List<Account> getOfflineAccounts();
 
     public abstract void saveCurrency(Currency currency);
 
     public abstract Account loadAccount(UUID uuid);
-
-    public abstract Account loadAccount(String name);
 }

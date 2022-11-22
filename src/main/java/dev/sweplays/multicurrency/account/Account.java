@@ -2,11 +2,8 @@ package dev.sweplays.multicurrency.account;
 
 import dev.sweplays.multicurrency.MultiCurrency;
 import dev.sweplays.multicurrency.currency.Currency;
-import dev.sweplays.multicurrency.utilities.Messages;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,7 +63,7 @@ public class Account {
 
     public double getBalance(String name) {
         for (Currency currency : getBalances().keySet())
-            if (currency.getName().equals(name))
+            if (currency.getSingular().equals(name))
                 return getBalances().get(currency);
         return 0;
     }

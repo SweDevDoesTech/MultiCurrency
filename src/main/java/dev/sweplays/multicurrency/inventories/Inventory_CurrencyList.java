@@ -1,6 +1,5 @@
 package dev.sweplays.multicurrency.inventories;
 
-import com.google.common.collect.Lists;
 import dev.sweplays.multicurrency.MultiCurrency;
 import dev.sweplays.multicurrency.currency.Currency;
 import dev.sweplays.multicurrency.utilities.SchedulerUtils;
@@ -13,7 +12,6 @@ import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
@@ -28,28 +26,23 @@ public class Inventory_CurrencyList {
             .pageSize(45)
             .create();
 
-    private List<String> currencyLore;
-
-    private final List<GuiItem> currencyItems = Lists.newArrayList();
-
     public Inventory_CurrencyList() {
-        gui.setDefaultTopClickAction(event -> {
-            event.setCancelled(true);
-        });
+        gui.setDefaultTopClickAction(event -> event.setCancelled(true));
 
-        gui.setCloseGuiAction(event -> {
-            MultiCurrency.getInventoryManager().getMainInventory().openInventory((Player) event.getPlayer());
-        });
+        gui.setCloseGuiAction(event -> MultiCurrency.getInventoryManager().getMainInventory().openInventory((Player) event.getPlayer()));
 
         gui.setItem(6, 3, ItemBuilder.from(Material.PAPER).setName(Utils.colorize("&b&lPrevious Page")).asGuiItem());
         gui.setItem(6, 7, ItemBuilder.from(Material.PAPER).setName(Utils.colorize("&b&lNext Page")).asGuiItem());
 
+        List<GuiItem> currencyItems = new ArrayList<>();
+
         int index = 0;
         for (Currency currency : MultiCurrency.getCurrencyManager().getCurrencies()) {
 
-            currencyLore = new ArrayList<>();
+            List<String> currencyLore = new ArrayList<>();
             currencyLore.add("");
-            currencyLore.add(Utils.colorize("&7Name: " + currency.getName()));
+            currencyLore.add(Utils.colorize("&7Singular: " + currency.getSingular()));
+            currencyLore.add(Utils.colorize("&7Plural: " + currency.getPlural()));
             currencyLore.add(Utils.colorize("&7Symbol: " + currency.getSymbol()));
             currencyLore.add(Utils.colorize("&7Default Balance: " + currency.getDefaultBalance()));
 
@@ -65,17 +58,16 @@ public class Inventory_CurrencyList {
             currencyLore.add(Utils.colorize("&7Material: " + currency.getInventoryMaterial()));
             currencyLore.add("");
 
-
-            currencyItems.add(ItemBuilder.from(currency.getInventoryMaterial()).asGuiItem(event -> {
+            currencyItems.add(ItemBuilder.from(currency.getInventoryMaterial()).asGuiItem());
+            currencyItems.get(index).setAction(event -> {
                 gui.setCloseGuiAction(event1 -> {
                 });
 
-                SchedulerUtils.runLater(1L, () -> {
-                    new Inventory_UpdateCurrency(currency).openInventory((Player) event.getWhoClicked());
-                });
-            }));
+                SchedulerUtils.runLater(1L, () -> new Inventory_UpdateCurrency(currency).openInventory((Player) event.getWhoClicked()));
+            });
             ItemMeta currencyItemMeta = currencyItems.get(index).getItemStack().getItemMeta();
-            currencyItemMeta.setDisplayName(Utils.colorize("&7" + currency.getName()));
+            assert currencyItemMeta != null;
+            currencyItemMeta.setDisplayName(Utils.colorize("&7" + currency.getSingular()));
             currencyItemMeta.setLore(currencyLore);
             currencyItems.get(index).getItemStack().setItemMeta(currencyItemMeta);
 
@@ -85,11 +77,7 @@ public class Inventory_CurrencyList {
     }
 
     public void openInventory(Player player) {
-        gui.setCloseGuiAction(event1 -> {
-            SchedulerUtils.runLater(0L, () -> {
-                MultiCurrency.getInventoryManager().getMainInventory().openInventory((Player) event1.getPlayer());
-            });
-        });
+        gui.setCloseGuiAction(event1 -> SchedulerUtils.runLater(0L, () -> MultiCurrency.getInventoryManager().getMainInventory().openInventory((Player) event1.getPlayer())));
         gui.open(player);
     }
 }

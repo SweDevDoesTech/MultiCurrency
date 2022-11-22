@@ -30,16 +30,12 @@ public class Inventory_AccountList {
             .pageSize(45)
             .create();
 
-    List<GuiItem> accountItems = Lists.newArrayList();
+    final List<GuiItem> accountItems = Lists.newArrayList();
 
     public Inventory_AccountList() {
-        gui.setDefaultTopClickAction(event -> {
-            event.setCancelled(true);
-        });
+        gui.setDefaultTopClickAction(event -> event.setCancelled(true));
 
-        gui.setCloseGuiAction(event -> {
-            MultiCurrency.getInventoryManager().getMainInventory().openInventory((Player) event.getPlayer());
-        });
+        gui.setCloseGuiAction(event -> MultiCurrency.getInventoryManager().getMainInventory().openInventory((Player) event.getPlayer()));
 
         gui.setItem(6, 3, ItemBuilder.from(Material.PAPER).setName(Utils.colorize("&b&lPrevious Page")).asGuiItem(event -> gui.previous()));
         gui.setItem(6, 7, ItemBuilder.from(Material.PAPER).setName(Utils.colorize("&b&lNext Page")).asGuiItem(event -> gui.next()));
@@ -58,7 +54,7 @@ public class Inventory_AccountList {
             else
                 accountLore.add(Utils.colorize("&7Payable: &c" + String.valueOf(account.isAcceptingPayments()).toUpperCase()));
             for (Currency currency : MultiCurrency.getCurrencyManager().getCurrencies()) {
-                accountLore.add(Utils.colorize("&7" + currency.getName() + ": &a" + account.getBalance(currency)));
+                accountLore.add(Utils.colorize("&7" + currency.getSingular() + ": &a" + account.getBalance(currency)));
             }
             accountLore.add("");
 
@@ -66,9 +62,7 @@ public class Inventory_AccountList {
                 gui.setCloseGuiAction(event1 -> {
                 });
 
-                SchedulerUtils.runLater(1L, () -> {
-                    new Inventory_UpdatePlayer(account).openInventory((Player) event.getWhoClicked());
-                });
+                SchedulerUtils.runLater(1L, () -> new Inventory_UpdatePlayer(account).openInventory((Player) event.getWhoClicked()));
             }));
             SkullMeta accountItemSkullMeta = (SkullMeta) accountItems.get(index).getItemStack().getItemMeta();
             accountItemSkullMeta.setOwningPlayer(Bukkit.getPlayer(account.getOwnerUuid()));
@@ -85,11 +79,7 @@ public class Inventory_AccountList {
     }
 
     public void openInventory(Player player) {
-        gui.setCloseGuiAction(event1 -> {
-            SchedulerUtils.runLater(0L, () -> {
-                MultiCurrency.getInventoryManager().getMainInventory().openInventory((Player) event1.getPlayer());
-            });
-        });
+        gui.setCloseGuiAction(event1 -> SchedulerUtils.runLater(0L, () -> MultiCurrency.getInventoryManager().getMainInventory().openInventory((Player) event1.getPlayer())));
         gui.open(player);
     }
 }

@@ -28,16 +28,12 @@ public class Inventory_UpdatePlayer {
     public Inventory_UpdatePlayer(Account account) {
         this.account = account;
 
-        gui.setDefaultTopClickAction(event -> {
-            event.setCancelled(true);
-        });
+        gui.setDefaultTopClickAction(event -> event.setCancelled(true));
 
-        gui.setCloseGuiAction(event -> {
-            SchedulerUtils.runLater(1L, () -> {
-                new Inventory_AccountList().openInventory((Player) event.getPlayer());
-                MultiCurrency.getDataStore().saveAccount(account);
-            });
-        });
+        gui.setCloseGuiAction(event -> SchedulerUtils.runLater(1L, () -> {
+            new Inventory_AccountList().openInventory((Player) event.getPlayer());
+            MultiCurrency.getDataStore().saveAccount(account);
+        }));
 
         // Payable
         List<String> payableLore = new ArrayList<>();
@@ -84,12 +80,10 @@ public class Inventory_UpdatePlayer {
     }
 
     public void openInventory(Player player) {
-        gui.setCloseGuiAction(event -> {
-            SchedulerUtils.runLater(1L, () -> {
-                new Inventory_AccountList().openInventory((Player) event.getPlayer());
-                MultiCurrency.getDataStore().saveAccount(account);
-            });
-        });
+        gui.setCloseGuiAction(event -> SchedulerUtils.runLater(1L, () -> {
+            new Inventory_AccountList().openInventory((Player) event.getPlayer());
+            MultiCurrency.getDataStore().saveAccount(account);
+        }));
         gui.open(player);
     }
 }

@@ -1,6 +1,5 @@
 package dev.sweplays.multicurrency.inventories;
 
-import dev.sweplays.multicurrency.MultiCurrency;
 import dev.sweplays.multicurrency.account.Account;
 import dev.sweplays.multicurrency.currency.Currency;
 import dev.sweplays.multicurrency.utilities.InventoryType;
@@ -26,15 +25,9 @@ public class Inventory_PlayerBalanceEditOptions {
     public Inventory_PlayerBalanceEditOptions(Currency currency, Account account) {
         this.account = account;
 
-        gui.setDefaultTopClickAction(event -> {
-            event.setCancelled(true);
-        });
+        gui.setDefaultTopClickAction(event -> event.setCancelled(true));
 
-        gui.setCloseGuiAction(event -> {
-            SchedulerUtils.runLater(1L, () -> {
-                new Inventory_UpdatePlayer(account).openInventory((Player) event.getPlayer());
-            });
-        });
+        gui.setCloseGuiAction(event -> SchedulerUtils.runLater(1L, () -> new Inventory_UpdatePlayer(account).openInventory((Player) event.getPlayer())));
 
         // Set Balance
         GuiItem setBalanceItem = ItemBuilder.from(Material.PAPER).asGuiItem(event -> {
@@ -72,11 +65,7 @@ public class Inventory_PlayerBalanceEditOptions {
     }
 
     public void openInventory(Player player) {
-        gui.setCloseGuiAction(event -> {
-            SchedulerUtils.runLater(1L, () -> {
-                new Inventory_UpdatePlayer(account).openInventory((Player) event.getPlayer());
-            });
-        });
+        gui.setCloseGuiAction(event -> SchedulerUtils.runLater(1L, () -> new Inventory_UpdatePlayer(account).openInventory((Player) event.getPlayer())));
         gui.open(player);
     }
 }

@@ -2,11 +2,13 @@ package dev.sweplays.multicurrency.utilities;
 
 public enum InventoryType {
 
-    SET_NAME,
+    SET_SINGULAR,
+    SET_PLURAL,
     SET_SYMBOL,
     SET_DEFAULT_BALANCE,
 
-    UPDATE_NAME,
+    UPDATE_SINGULAR,
+    UPDATE_PLURAL,
     UPDATE_SYMBOL,
     UPDATE_DEFAULT_BALANCE,
 

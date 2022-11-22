@@ -1,7 +1,6 @@
 package dev.sweplays.multicurrency.data;
 
 import dev.sweplays.multicurrency.MultiCurrency;
-import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +8,7 @@ import java.sql.*;
 
 public class DatabaseManager {
 
-    private MultiCurrency plugin;
+    private final MultiCurrency plugin;
     private String database;
     private String host;
     private String username;
@@ -78,16 +77,15 @@ public class DatabaseManager {
         }
     }
 
-    public boolean execute(String query) {
+    public void execute(String query) {
         try {
             if (this.connection == null || this.connection.isClosed() || !this.connection.isValid(this.connection.getNetworkTimeout())) {
                 this.initializeConnection();
             }
 
-            return this.statement.execute(query);
+            this.statement.execute(query);
         } catch (Exception exception) {
             exception.printStackTrace();
-            return false;
         }
     }
 

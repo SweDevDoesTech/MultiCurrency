@@ -1,12 +1,6 @@
 package dev.sweplays.multicurrency.inventories;
 
-import dev.sweplays.multicurrency.utilities.InventoryType;
 import lombok.Getter;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class InventoryManager {
 

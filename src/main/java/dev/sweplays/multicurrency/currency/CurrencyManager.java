@@ -10,18 +10,12 @@ import java.util.UUID;
 
 public class CurrencyManager {
 
-    private final MultiCurrency plugin;
-
-    public CurrencyManager(MultiCurrency plugin) {
-        this.plugin = plugin;
-    }
-
     @Getter
     private final List<Currency> currencies = Lists.newArrayList();
 
     public boolean currencyExists(String name) {
         for (Currency currency : currencies)
-            if (currency.getName().equals(name))
+            if (currency.getSingular().equals(name))
                 return true;
         return false;
     }
@@ -36,7 +30,7 @@ public class CurrencyManager {
 
     public Currency getCurrency(String name) {
         for (Currency currency : currencies) {
-            if (!currency.getName().equals(name)) continue;
+            if (!currency.getSingular().equals(name)) continue;
             return currency;
         }
         return null;
@@ -51,10 +45,10 @@ public class CurrencyManager {
         return null;
     }
 
-    public Currency createNewCurrency(String name) {
-        if (currencyExists(name)) return null;
+    public Currency createNewCurrency(String singular, String plural) {
+        if (currencyExists(singular)) return null;
 
-        Currency currency = new Currency(UUID.randomUUID(), name);
+        Currency currency = new Currency(UUID.randomUUID(), singular, plural);
         if (currencies.size() == 0) {
             currency.setDefault(true);
         }
@@ -65,24 +59,26 @@ public class CurrencyManager {
         return currency;
     }
 
+    public void deleteCurrency(Currency currency) {
+        currencies.remove(currency);
+        MultiCurrency.getDataStore().deleteCurrency(currency);
+    }
+
     /**
      *
-     * @param name
-     * @param symbol
-     * @param defaultBalance
-     * @param payable
-     * @param material
      * @apiNote Only used for creating a currency within the plugin since it does not save after creation.
      * @return The newly created currency.
      * @since 1.0.0
      */
-    public Currency createNewCurrency(String name, String symbol, Double defaultBalance, boolean payable, Material material) {
-        if (currencyExists(name)) return null;
+    public Currency createNewCurrency(String singular, String plural, String symbol, Double defaultBalance, boolean payable, Material material) {
+        if (currencyExists(singular)) return null;
 
-        Currency currency = new Currency(UUID.randomUUID(), name, symbol, defaultBalance, payable, material);
+        Currency currency = new Currency(UUID.randomUUID(), singular, plural, symbol, defaultBalance, payable, material);
         if (currencies.size() == 0) {
             currency.setDefault(true);
         }
+
+        currencies.add(currency);
 
         return currency;
     }

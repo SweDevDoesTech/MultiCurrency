@@ -1,11 +1,35 @@
+# Built-in placeholders:
+# {player} | The player who executed the command or action.
+# {target} | The target player of the action executed.
+# {amount} | The amount of the action when removing, adding or setting money.
+# {currency} | The currency that was used in the action.
+# {symbol} | The symbol of the currency.
+# {prefix} | The prefix specified in this file.
 plugin:
   prefix: "&fMulti&6Currency &7>"
+  no-permission: "{prefix} &cYou do not have permission to execute this command."
 
 currency:
   add:
-    success: " &aSuccessfully added {amount} of {currency} to {player}'s account."
-    success_target: " &a{player} added {amount} of {currency} to your account."
+    success: "{prefix} &aSuccessfully added &7{amount}{symbol} &aof &7{currency} &ato &7{target}&a's account."
+    success-no-target: "{prefix} &aSuccessfully added {amount}{symbol} of {currency} to your account."
+    success-target: "{prefix} &7{player} &aadded &7{amount}{symbol} &aof &7{currency} &ato your account."
 
   remove:
-    success: " &aSuccessfully removed {amount} of {currency} to {player}'s account."
-    success_target: " &c{player} removed {amount} of {currency} from your account."
+    success: "{prefix} &aSuccessfully &aremoved &7{amount}{symbol} &aof &7{currency} &afrom &7{target}&a's account."
+    success-no-target: "{prefix} &aSuccessfully &aremoved &7{amount}{symbol} &aof &7{currency} &afrom your account."
+    success-target: "{prefix} &7{player} &cremoved &7{amount}{symbol} &cof &7{currency} &cfrom your account."
+
+  set:
+    success: "{prefix} &aSuccessfully set &7{target}&a's balance of &7{currency} &ato &7{amount}{symbol}&a."
+    success-no-target: "{prefix} &aSuccessfully set your balance of &7{currency} &ato &7{amount}{symbol}&a."
+    success-target: "{prefix} &7{player} &cset your balance of &7{currency} &cto &7{amount}{symbol}&c."
+
+  pay:
+    success: "{prefix} &7{amount}{symbol} &aof {currency} &ahas been sent to &7{target}&a."
+    success-target: "{prefix} &aYou received &7{amount}{symbol} &aof &7{currency} &afrom &7{player}&a."
+    error: "{prefix} &cMinimum payment amount is &70{symbol}&c."
+    not-enough: "{prefix} &cYou don't have enough {currency_}"
+
+  balance: "{prefix} &aYou have &7{amount}{symbol} &aof &7{currency}&a.)"
+  no-default-currency: "{prefix} &cNo default currency exists. Please contact an admin."

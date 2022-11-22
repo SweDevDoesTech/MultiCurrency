@@ -24,20 +24,14 @@ public class Inventory_Options {
     public Inventory_Options(Object... objects) {
         if (!(objects[0] instanceof InventoryType type)) return;
 
-        gui.setDefaultTopClickAction(event -> {
-            event.setCancelled(true);
-        });
+        gui.setDefaultTopClickAction(event -> event.setCancelled(true));
 
         gui.setCloseGuiAction(event -> {
             if (type == InventoryType.SET)
-                SchedulerUtils.runLater(1L, () -> {
-                    new Inventory_CreateCurrency((Player) event.getPlayer()).openInventory((Player) event.getPlayer());
-                });
+                SchedulerUtils.runLater(1L, () -> new Inventory_CreateCurrency((Player) event.getPlayer()).openInventory((Player) event.getPlayer()));
             else if (type == InventoryType.UPDATE) {
                 if (!(objects[1] instanceof Currency currency)) return;
-                SchedulerUtils.runLater(1L, () -> {
-                    new Inventory_UpdateCurrency(currency).openInventory((Player) event.getPlayer());
-                });
+                SchedulerUtils.runLater(1L, () -> new Inventory_UpdateCurrency(currency).openInventory((Player) event.getPlayer()));
             }
         });
 
@@ -46,10 +40,10 @@ public class Inventory_Options {
             gui.setCloseGuiAction(event1 -> {
             });
             if (type == InventoryType.SET)
-                new Inventory_Set(InventoryType.SET_NAME).openInventory((Player) event.getWhoClicked());
+                new Inventory_Set(InventoryType.SET_SINGULAR).openInventory((Player) event.getWhoClicked());
             else if (type == InventoryType.UPDATE) {
                 if (!(objects[1] instanceof Currency currency)) return;
-                new Inventory_Update(currency, InventoryType.UPDATE_NAME).openInventory((Player) event.getWhoClicked());
+                new Inventory_Update(currency, InventoryType.UPDATE_SINGULAR).openInventory((Player) event.getWhoClicked());
             }
         });
         ItemMeta setNameItemMeta = setNameItem.getItemStack().getItemMeta();

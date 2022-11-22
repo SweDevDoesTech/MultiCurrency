@@ -4,8 +4,9 @@ import co.aikar.commands.BukkitCommandManager;
 import dev.sweplays.multicurrency.account.Account;
 import dev.sweplays.multicurrency.account.AccountManager;
 import dev.sweplays.multicurrency.commands.Command_Balance;
+import dev.sweplays.multicurrency.commands.Command_Economy;
 import dev.sweplays.multicurrency.commands.Command_Main;
-import dev.sweplays.multicurrency.currency.Currency;
+import dev.sweplays.multicurrency.commands.Command_Pay;
 import dev.sweplays.multicurrency.currency.CurrencyManager;
 import dev.sweplays.multicurrency.data.DataStore;
 import dev.sweplays.multicurrency.data.DatabaseManager;
@@ -66,7 +67,7 @@ public final class MultiCurrency extends JavaPlugin {
         databaseManager.initializeConnection();
 
         fileManager = new FileManager();
-        currencyManager = new CurrencyManager(this);
+        currencyManager = new CurrencyManager();
         accountManager = new AccountManager();
 
         initializeDataStore("sqlite", true);
@@ -75,7 +76,9 @@ public final class MultiCurrency extends JavaPlugin {
         inventoryManager = new InventoryManager();
 
         commandManager.registerCommand(new Command_Balance());
-        commandManager.registerCommand(new Command_Main(this));
+        commandManager.registerCommand(new Command_Economy());
+        commandManager.registerCommand(new Command_Pay());
+        commandManager.registerCommand(new Command_Main());
     }
 
     @Override

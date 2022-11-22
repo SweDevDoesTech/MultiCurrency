@@ -2,7 +2,6 @@ package dev.sweplays.multicurrency.inventories;
 
 import dev.sweplays.multicurrency.MultiCurrency;
 import dev.sweplays.multicurrency.account.Account;
-import dev.sweplays.multicurrency.utilities.InventoryType;
 import dev.sweplays.multicurrency.utilities.Utils;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
@@ -13,11 +12,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class Inventory_Search {
 
-    AnvilGUI.Builder anvilGui;
+    final AnvilGUI.Builder anvilGui;
 
     public Inventory_Search() {
         anvilGui = new AnvilGUI.Builder();

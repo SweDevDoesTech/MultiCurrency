@@ -14,7 +14,11 @@ public class Currency {
 
     @Getter
     @Setter
-    private String name;
+    private String singular;
+
+    @Getter
+    @Setter
+    private String plural;
 
     @Getter
     @Setter
@@ -40,14 +44,16 @@ public class Currency {
     @Setter
     private ChatColor color;
 
-    public Currency(UUID uuid, String name) {
+    public Currency(UUID uuid, String singular, String plural) {
         this.uuid = uuid;
-        this.name = name;
+        this.singular = singular;
+        this.plural = plural;
     }
 
-    public Currency(UUID uuid, String name, String symbol, Double defaultBalance, boolean payable, Material inventoryMaterial) {
+    public Currency(UUID uuid, String singular, String plural, String symbol, Double defaultBalance, boolean payable, Material inventoryMaterial) {
         this.uuid = uuid;
-        this.name = name;
+        this.singular = singular;
+        this.plural = plural;
         this.symbol = symbol;
         this.defaultBalance = defaultBalance;
         this.payable = payable;

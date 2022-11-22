@@ -1,6 +1,5 @@
 package dev.sweplays.multicurrency.account;
 
-import com.google.common.collect.Lists;
 import dev.sweplays.multicurrency.MultiCurrency;
 import lombok.Getter;
 
@@ -19,6 +18,7 @@ public class AccountManager {
 
     public Account getAccount(UUID uuid) {
         for (Account account : getAccounts()) {
+            if (account == null) return null;
             if (!account.getOwnerUuid().equals(uuid)) continue;
             return account;
         }

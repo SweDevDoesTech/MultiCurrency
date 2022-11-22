@@ -1,5 +1,6 @@
 package dev.sweplays.multicurrency.inventories;
 
+import dev.sweplays.multicurrency.utilities.SchedulerUtils;
 import dev.sweplays.multicurrency.utilities.Utils;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.Gui;
@@ -11,20 +12,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class Inventory_Main {
 
-    Gui gui = Gui.gui()
+    final Gui gui = Gui.gui()
             .title(Component.text(Utils.colorize("&fMulti&6Currency")))
             .rows(5)
             .create();
 
     public Inventory_Main() {
-        gui.setDefaultTopClickAction(event -> {
-            event.setCancelled(true);
-        });
+        gui.setDefaultTopClickAction(event -> event.setCancelled(true));
 
         // Create Currency
-        GuiItem createItem = ItemBuilder.from(Material.NETHER_STAR).asGuiItem(event -> {
-            new Inventory_CreateCurrency((Player) event.getWhoClicked()).openInventory((Player) event.getWhoClicked());
-        });
+        GuiItem createItem = ItemBuilder.from(Material.NETHER_STAR).asGuiItem(event -> new Inventory_CreateCurrency((Player) event.getWhoClicked()).openInventory((Player) event.getWhoClicked()));
         ItemMeta createItemMeta = createItem.getItemStack().getItemMeta();
         createItemMeta.setDisplayName(Utils.colorize("&6&lCreate New Currency"));
         createItem.getItemStack().setItemMeta(createItemMeta);
@@ -32,7 +29,9 @@ public class Inventory_Main {
         // Currency List
         GuiItem currencyListItem = ItemBuilder.from(Material.PAPER).asGuiItem(event -> {
             event.setCancelled(true);
-            new Inventory_CurrencyList().openInventory((Player) event.getWhoClicked());
+            SchedulerUtils.runLater(1L, () -> {
+                new Inventory_CurrencyList().openInventory((Player) event.getWhoClicked());
+            });
             //MultiCurrency.getInventoryManager().getCurrencyListInventory().openInventory((Player) event.getWhoClicked());
         });
         ItemMeta currencyListItemMeta = currencyListItem.getItemStack().getItemMeta();

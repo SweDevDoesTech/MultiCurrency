@@ -43,8 +43,8 @@ public class YamlStorage extends DataStore {
     }
 
     @Override
-    public Account returnAccountWithBalances(Account account) {
-        return null;
+    public void deleteCurrency(Currency currency) {
+
     }
 
     @Override
@@ -58,11 +58,6 @@ public class YamlStorage extends DataStore {
 
     @Override
     public Account loadAccount(UUID uuid) {
-        return null;
-    }
-
-    @Override
-    public Account loadAccount(String name) {
         return null;
     }
 }

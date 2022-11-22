@@ -6,10 +6,10 @@ import lombok.Getter;
 public class ToggleButton {
 
     @Getter
-    private boolean enabled = false;
+    private boolean enabled;
 
     @Getter
-    private int slot;
+    private final int slot;
 
     public ToggleButton(int slot, boolean enabled) {
         this.enabled = enabled;

@@ -12,9 +12,11 @@ import java.io.IOException;
 public class MessagesFile {
 
     @Getter
+    final
     File file;
 
     @Getter
+    final
     YamlConfiguration yamlConfiguration;
 
     FileConfiguration fileConfiguration;

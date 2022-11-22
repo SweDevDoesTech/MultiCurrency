@@ -18,6 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Inventory_UpdateCurrency {
@@ -27,17 +28,15 @@ public class Inventory_UpdateCurrency {
             .rows(5)
             .create();
 
-    Currency defaultCurrency = MultiCurrency.getCurrencyManager().getDefaultCurrency();
-    AtomicReference<Material> currentMaterial;
+    final Currency defaultCurrency = MultiCurrency.getCurrencyManager().getDefaultCurrency();
+    final AtomicReference<Material> currentMaterial;
 
     private final Currency currency;
 
     public Inventory_UpdateCurrency(Currency currency) {
         this.currency = currency;
 
-        gui.setDefaultTopClickAction(event -> {
-            event.setCancelled(true);
-        });
+        gui.setDefaultTopClickAction(event -> event.setCancelled(true));
 
         gui.setCloseGuiAction(event -> {
             MultiCurrency.getDataStore().saveCurrency(defaultCurrency);
@@ -50,7 +49,8 @@ public class Inventory_UpdateCurrency {
 
         // Options
         GuiItem optionsItem = ItemBuilder.from(Material.PAPER).asGuiItem(event -> {
-            gui.setCloseGuiAction(event1 -> {});
+            gui.setCloseGuiAction(event1 -> {
+            });
 
             new Inventory_Options(InventoryType.UPDATE, currency).openInventory((Player) event.getWhoClicked());
         });
@@ -148,8 +148,30 @@ public class Inventory_UpdateCurrency {
         materialItemMeta.setLore(materialLore);
         materialItem.getItemStack().setItemMeta(materialItemMeta);
 
+        // Delete
+        AtomicInteger confirmCount = new AtomicInteger();
+        GuiItem deleteItem = ItemBuilder.from(Material.BARRIER).asGuiItem(event -> {
+            confirmCount.getAndIncrement();
+            if (confirmCount.get() == 1) {
+                event.getWhoClicked().sendMessage(Utils.colorize("&cClick one more time to confirm deletion."));
+            }
+
+            if (confirmCount.get() == 2) {
+                gui.setCloseGuiAction(event1 -> {
+                });
+                MultiCurrency.getCurrencyManager().deleteCurrency(currency);
+                SchedulerUtils.runLater(1L, () -> {
+                    new Inventory_CurrencyList().openInventory((Player) event.getWhoClicked());
+                });
+            }
+        });
+        ItemMeta deleteItemMeta = deleteItem.getItemStack().getItemMeta();
+        deleteItemMeta.setDisplayName(Utils.colorize("&c&lDelete Currency"));
+        deleteItem.getItemStack().setItemMeta(deleteItemMeta);
+
         gui.setItem(13, optionsItem);
         gui.setItem(20, payableItem);
+        gui.setItem(22, deleteItem);
         gui.setItem(24, defaultItem);
         gui.setItem(31, materialItem);
     }

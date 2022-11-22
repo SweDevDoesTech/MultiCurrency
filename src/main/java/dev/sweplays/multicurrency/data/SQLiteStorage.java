@@ -1,13 +1,10 @@
 package dev.sweplays.multicurrency.data;
 
-import com.google.gson.JsonElement;
 import dev.sweplays.multicurrency.MultiCurrency;
 import dev.sweplays.multicurrency.account.Account;
 import dev.sweplays.multicurrency.currency.Currency;
 
-import dev.sweplays.multicurrency.utilities.Utils;
 import org.bukkit.Material;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -19,9 +16,9 @@ import java.util.*;
 
 public class SQLiteStorage extends DataStore {
 
-    DatabaseManager databaseManager = MultiCurrency.getDatabaseManager();
+    final DatabaseManager databaseManager = MultiCurrency.getDatabaseManager();
 
-    private final String SAVE_CURRENCY_SQL = "INSERT OR REPLACE INTO currencies (uuid, name, symbol, defaultBalance, payable, isDefault, material) VALUES (?,?,?,?,?,?,?)";
+    private final String SAVE_CURRENCY_SQL = "INSERT OR REPLACE INTO currencies (uuid, singular, plural, symbol, defaultBalance, payable, isDefault, material) VALUES (?,?,?,?,?,?,?,?)";
     private final String SAVE_ACCOUNT_SQL = "INSERT OR REPLACE INTO accounts (uuid, name, acceptingPayments, balanceData) VALUES (?,?,?,?)";
 
     public SQLiteStorage() {
@@ -32,9 +29,8 @@ public class SQLiteStorage extends DataStore {
     public void initialize() {
         MultiCurrency.getInstance().getLogger().info("Creating tables in database if they do not exist...");
 
-        databaseManager.execute("CREATE TABLE IF NOT EXISTS currencies (uuid VARCHAR(255) NOT NULL PRIMARY KEY, name VARCHAR(255), symbol VARCHAR(255), defaultBalance DOUBLE, payable BOOLEAN, isDefault BOOLEAN, material VARCHAR(255))");
+        databaseManager.execute("CREATE TABLE IF NOT EXISTS currencies (uuid VARCHAR(255) NOT NULL PRIMARY KEY, singular VARCHAR(255), plural VARCHAR(255), symbol VARCHAR(255), defaultBalance DOUBLE, payable BOOLEAN, isDefault BOOLEAN, material VARCHAR(255))");
         databaseManager.execute("CREATE TABLE IF NOT EXISTS accounts (uuid VARCHAR(255) NOT NULL PRIMARY KEY, name VARCHAR(255), acceptingPayments BOOLEAN, balanceData LONGTEXT NULL)");
-        databaseManager.execute("CREATE TABLE IF NOT EXISTS balances (account VARCHAR(255), currency VARCHAR(255), balance DOUBLE)");
     }
 
     @Override
@@ -47,7 +43,7 @@ public class SQLiteStorage extends DataStore {
 
             JSONObject jsonObject = new JSONObject();
             for (Currency currency : MultiCurrency.getCurrencyManager().getCurrencies()) {
-                jsonObject.put(currency.getUuid().toString(), account.getBalance(currency.getName()));
+                jsonObject.put(currency.getUuid().toString(), account.getBalance(currency.getSingular()));
             }
             String json = jsonObject.toJSONString();
             statement.setString(4, json);
@@ -97,13 +93,14 @@ public class SQLiteStorage extends DataStore {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 UUID uuid = UUID.fromString(resultSet.getString("uuid"));
-                String name = resultSet.getString("name");
+                String singular = resultSet.getString("singular");
+                String plural = resultSet.getString("plural");
                 String symbol = resultSet.getString("symbol");
                 double defaultBalance = resultSet.getDouble("defaultBalance");
                 boolean payable = resultSet.getBoolean("payable");
                 boolean isDefault = resultSet.getBoolean("isDefault");
                 Material material = Material.valueOf(resultSet.getString("material"));
-                Currency currency = new Currency(uuid, name);
+                Currency currency = new Currency(uuid, singular, plural);
                 currency.setSymbol(symbol);
                 currency.setDefaultBalance(defaultBalance);
                 currency.setPayable(payable);
@@ -111,7 +108,7 @@ public class SQLiteStorage extends DataStore {
                 currency.setInventoryMaterial(material);
 
                 MultiCurrency.getCurrencyManager().add(currency);
-                MultiCurrency.getInstance().getLogger().info("Loaded currency: " + currency.getName());
+                MultiCurrency.getInstance().getLogger().info("Loaded currency: " + currency.getSingular());
             }
         } catch (SQLException exception) {
             exception.printStackTrace();
@@ -119,8 +116,15 @@ public class SQLiteStorage extends DataStore {
     }
 
     @Override
-    public Account returnAccountWithBalances(Account account) {
-        return null;
+    public void deleteCurrency(Currency currency) {
+        try {
+            PreparedStatement statement = databaseManager.getPreparedStatement("DELETE FROM currencies WHERE uuid = ?");
+            statement.setString(1, currency.getUuid().toString());
+            statement.executeUpdate();
+            MultiCurrency.getInstance().getLogger().info("Deleted currency: " + currency.getSingular());
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
     }
 
     /*
@@ -184,15 +188,16 @@ public class SQLiteStorage extends DataStore {
         try {
             PreparedStatement statement = databaseManager.getPreparedStatement(SAVE_CURRENCY_SQL);
             statement.setString(1, currency.getUuid().toString());
-            statement.setString(2, currency.getName());
-            statement.setString(3, currency.getSymbol());
-            statement.setDouble(4, currency.getDefaultBalance());
-            statement.setBoolean(5, currency.isPayable());
-            statement.setBoolean(6, currency.isDefault());
-            statement.setString(7, currency.getInventoryMaterial().toString());
+            statement.setString(2, currency.getSingular());
+            statement.setString(3, currency.getPlural());
+            statement.setString(4, currency.getSymbol());
+            statement.setDouble(5, currency.getDefaultBalance());
+            statement.setBoolean(6, currency.isPayable());
+            statement.setBoolean(7, currency.isDefault());
+            statement.setString(8, currency.getInventoryMaterial().toString());
             statement.execute();
 
-            MultiCurrency.getInstance().getLogger().info("Saved currency: " + currency.getName());
+            MultiCurrency.getInstance().getLogger().info("Saved currency: " + currency.getSingular());
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -235,10 +240,5 @@ public class SQLiteStorage extends DataStore {
             exception.printStackTrace();
         }
         return account;
-    }
-
-    @Override
-    public Account loadAccount(String name) {
-        return null;
     }
 }

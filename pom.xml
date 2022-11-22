@@ -99,13 +99,6 @@
             <artifactId>acf-bukkit</artifactId>
             <version>0.5.1-SNAPSHOT</version>
         </dependency>
-        <!--
-        <dependency>
-            <groupId>com.github.stefvanschie.inventoryframework</groupId>
-            <artifactId>IF</artifactId>
-            <version>0.10.7</version>
-        </dependency>
-        -->
         <dependency>
             <groupId>dev.triumphteam</groupId>
             <artifactId>triumph-gui</artifactId>

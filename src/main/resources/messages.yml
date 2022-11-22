@@ -32,4 +32,5 @@ currency:
     not-enough: "{prefix} &cYou don't have enough {currency_}"
 
   balance: "{prefix} &aYou have &7{amount}{symbol} &aof &7{currency}&a.)"
+  balance-target: "{prefix} &7{target} &ahas &7{amount} &aof &7{currency}&a."
   no-default-currency: "{prefix} &cNo default currency exists. Please contact an admin."

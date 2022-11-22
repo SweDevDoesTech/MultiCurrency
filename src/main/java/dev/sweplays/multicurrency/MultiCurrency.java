@@ -55,8 +55,6 @@ public final class MultiCurrency extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        this.getServer().getPluginManager().registerEvents(new JoinLeaveListener(), this);
-
         commandManager = new BukkitCommandManager(this);
 
         File dataFolder = new File(getDataFolder(), "data");
@@ -70,6 +68,8 @@ public final class MultiCurrency extends JavaPlugin {
         currencyManager = new CurrencyManager();
         accountManager = new AccountManager();
 
+        this.getServer().getPluginManager().registerEvents(new JoinLeaveListener(), this);
+
         initializeDataStore("sqlite", true);
 
         inventoryCache = new InventoryCache();
@@ -79,6 +79,12 @@ public final class MultiCurrency extends JavaPlugin {
         commandManager.registerCommand(new Command_Economy());
         commandManager.registerCommand(new Command_Pay());
         commandManager.registerCommand(new Command_Main());
+
+        for (Player player : this.getServer().getOnlinePlayers()) {
+            Account account = getDataStore().loadAccount(player.getUniqueId());
+            if (account != null)
+                getAccountManager().addAccount(account);
+        }
     }
 
     @Override

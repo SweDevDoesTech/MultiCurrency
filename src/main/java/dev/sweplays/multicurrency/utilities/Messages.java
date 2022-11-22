@@ -28,6 +28,7 @@ public enum Messages {
     PAY_NOT_ENOUGH("currency.pay.not-enough"),
 
     BALANCE("currency.balance"),
+    BALANCE_TARGET("currency.balance-target"),
     ;
 
     private final String path;

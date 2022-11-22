@@ -47,6 +47,8 @@ public class Inventory_AccountList {
 
         int index = 0;
         for (Account account : MultiCurrency.getAccountManager().getAccounts()) {
+            if (account == null) return;
+            
             List<String> accountLore = new ArrayList<>();
             accountLore.add("");
             if (account.isAcceptingPayments())

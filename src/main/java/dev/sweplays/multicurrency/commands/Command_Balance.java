@@ -7,6 +7,7 @@ import co.aikar.commands.annotation.Default;
 import dev.sweplays.multicurrency.MultiCurrency;
 import dev.sweplays.multicurrency.account.Account;
 import dev.sweplays.multicurrency.currency.Currency;
+import dev.sweplays.multicurrency.utilities.Messages;
 import dev.sweplays.multicurrency.utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -40,7 +41,13 @@ public class Command_Balance extends BaseCommand {
                 player.sendMessage(Utils.colorize("&cNo default currency exists. Please contact an admin."));
                 return;
             }
-            player.sendMessage("You have: " + account.getBalance(currency));
+            player.sendMessage(Utils.colorize(Messages.BALANCE.get()
+                    .replace("{prefix}", Messages.PREFIX.get())
+                    .replace("{symbol}", currency.getSymbol())
+                    .replace("{currency}", account.getBalance(currency) <= 1 ? currency.getSingular() : currency.getPlural())
+                    .replace("{amount}", String.valueOf(account.getBalance(currency)))
+                    .replace("{player}", player.getName())
+            ));
 
 
         } else if (args.length == 1) {
@@ -49,7 +56,13 @@ public class Command_Balance extends BaseCommand {
                 player.sendMessage(Utils.colorize("&cCurrency " + args[0] + " does not exist."));
                 return;
             }
-            player.sendMessage("You have: " + account.getBalance(currency));
+            player.sendMessage(Utils.colorize(Messages.SET_SUCCESS.get()
+                    .replace("{prefix}", Messages.PREFIX.get())
+                    .replace("{symbol}", currency.getSymbol())
+                    .replace("{currency}", account.getBalance(currency) <= 1 ? currency.getSingular() : currency.getPlural())
+                    .replace("{amount}", String.valueOf(account.getBalance(currency)))
+                    .replace("{player}", player.getName())
+            ));
 
         } else if (args.length == 2) {
             Currency currency = MultiCurrency.getCurrencyManager().getCurrency(args[0]);
@@ -63,8 +76,13 @@ public class Command_Balance extends BaseCommand {
                 return;
             }
             Account targetAccount = MultiCurrency.getAccountManager().getAccount(target.getUniqueId());
-            player.sendMessage(target.getDisplayName() + " has " + targetAccount.getBalance(currency));
-
+            player.sendMessage(Utils.colorize(Messages.BALANCE_TARGET.get()
+                    .replace("{prefix}", Messages.PREFIX.get())
+                    .replace("{symbol}", currency.getSymbol())
+                    .replace("{currency}", targetAccount.getBalance(currency) <= 1 ? currency.getSingular() : currency.getPlural())
+                    .replace("{amount}", String.valueOf(targetAccount.getBalance(currency)))
+                    .replace("{target}", target.getName())
+            ));
         }
     }
 }

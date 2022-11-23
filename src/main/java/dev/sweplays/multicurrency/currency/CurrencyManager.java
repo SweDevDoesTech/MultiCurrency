@@ -1,21 +1,26 @@
 package dev.sweplays.multicurrency.currency;
 
-import com.google.common.collect.Lists;
 import dev.sweplays.multicurrency.MultiCurrency;
 import lombok.Getter;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class CurrencyManager {
 
     @Getter
-    private final List<Currency> currencies = Lists.newArrayList();
+    private final List<Currency> currencies;
 
-    public boolean currencyExists(String name) {
+    public CurrencyManager() {
+        this.currencies = new ArrayList<>();
+    }
+
+    public boolean currencyExists(String singular) {
         for (Currency currency : currencies)
-            if (currency.getSingular().equals(name))
+            if (currency.getSingular().equals(singular))
                 return true;
         return false;
     }
@@ -78,8 +83,6 @@ public class CurrencyManager {
             currency.setDefault(true);
         }
 
-        currencies.add(currency);
-
         return currency;
     }
 
@@ -93,12 +96,5 @@ public class CurrencyManager {
         if (!currencies.contains(currency)) return;
 
         currencies.remove(currency);
-    }
-
-    public void replace(Currency currency) {
-        if (!currencies.contains(currency)) return;
-
-        currencies.remove(currency);
-        currencies.add(currency);
     }
 }

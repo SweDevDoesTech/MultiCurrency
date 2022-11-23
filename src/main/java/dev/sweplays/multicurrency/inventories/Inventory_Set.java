@@ -2,6 +2,7 @@ package dev.sweplays.multicurrency.inventories;
 
 import dev.sweplays.multicurrency.MultiCurrency;
 import dev.sweplays.multicurrency.utilities.InventoryType;
+import dev.sweplays.multicurrency.utilities.Messages;
 import dev.sweplays.multicurrency.utilities.Utils;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Material;
@@ -50,7 +51,7 @@ public class Inventory_Set {
 
         ItemStack itemLeft = new ItemStack(Material.PAPER);
         ItemMeta itemLeftMeta = itemLeft.getItemMeta();
-        itemLeftMeta.setDisplayName(Utils.colorize("&7Enter above"));
+        itemLeftMeta.setDisplayName(Utils.colorize("&7Enter Above"));
         itemLeftMeta.setLore(itemLeftLore);
         itemLeft.setItemMeta(itemLeftMeta);
 
@@ -71,7 +72,9 @@ public class Inventory_Set {
                 if (text.matches("[0-9]+"))
                     MultiCurrency.getInventoryCache().getDefaultBalance().put(player, Double.valueOf(text));
                 else {
-                    player.sendMessage(Utils.colorize("&cThe text must only container numbers."));
+                    player.sendMessage(Utils.colorize(Messages.ONLY_NUMBERS.get()
+                            .replace("{prefix}", Messages.PREFIX.get())
+                    ));
                     anvilGui.open(player);
                     return AnvilGUI.Response.close();
                 }

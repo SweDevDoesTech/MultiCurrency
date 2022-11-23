@@ -28,12 +28,17 @@ public class JoinLeaveListener implements Listener {
                     MultiCurrency.getDataStore().createAccount(account);
                 }
 
-                MultiCurrency.getInstance().getLogger().info(Utils.colorize("New account created for: " + account.getOwnerName()));
+                if (MultiCurrency.getInstance().getConfig().getBoolean("message-options.account-messages"))
+                    MultiCurrency.getInstance().getLogger().info(Utils.colorize("New account created for: " + account.getOwnerName()));
             } else if (account.getOwnerName() == null || !account.getOwnerName().equals(player.getName())) {
                 account.setOwnerName(player.getName());
                 MultiCurrency.getDataStore().saveAccount(account);
+                MultiCurrency.getAccountManager().addAccount(account);
                 MultiCurrency.getInstance().getLogger().info("Name change detected for player " + account.getOwnerName() + ". Updating account information.");
             }
+            MultiCurrency.getAccountManager().addAccount(account);
+           // Fix account list null error.
+
         });
     }
 
@@ -41,16 +46,11 @@ public class JoinLeaveListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        SchedulerUtils.run(() -> {
-            Account account = MultiCurrency.getAccountManager().getAccount(player.getUniqueId());
-            if (account != null) {
-                MultiCurrency.getAccountManager().addAccount(account);
-            }
-        });
-
         SchedulerUtils.runLater(40L, () -> {
             if (MultiCurrency.getCurrencyManager().getDefaultCurrency() == null && (player.isOp() || player.hasPermission("multicurrency.command.currency"))) {
-                player.sendMessage(Utils.colorize(Messages.PREFIX.get() + " &cYou have not made a currency yet. Please do so by typing /multicurrency."));
+                player.sendMessage(Utils.colorize("{prefix} &cYou have not made a currency yet. Please do so by typing /multicurrency.")
+                        .replace("{prefix}", Messages.PREFIX.get())
+                );
             }
         });
     }

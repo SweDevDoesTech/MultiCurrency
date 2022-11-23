@@ -3,10 +3,12 @@ package dev.sweplays.multicurrency;
 import co.aikar.commands.BukkitCommandManager;
 import dev.sweplays.multicurrency.account.Account;
 import dev.sweplays.multicurrency.account.AccountManager;
+import dev.sweplays.multicurrency.api.MultiCurrencyAPI;
 import dev.sweplays.multicurrency.commands.Command_Balance;
 import dev.sweplays.multicurrency.commands.Command_Economy;
 import dev.sweplays.multicurrency.commands.Command_Main;
 import dev.sweplays.multicurrency.commands.Command_Pay;
+import dev.sweplays.multicurrency.currency.Currency;
 import dev.sweplays.multicurrency.currency.CurrencyManager;
 import dev.sweplays.multicurrency.data.DataStore;
 import dev.sweplays.multicurrency.data.DatabaseManager;
@@ -15,12 +17,14 @@ import dev.sweplays.multicurrency.files.FileManager;
 import dev.sweplays.multicurrency.inventories.InventoryCache;
 import dev.sweplays.multicurrency.inventories.InventoryManager;
 import dev.sweplays.multicurrency.listeners.JoinLeaveListener;
+import dev.sweplays.multicurrency.utilities.SchedulerUtils;
 import dev.sweplays.multicurrency.utilities.Utils;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.concurrent.atomic.AtomicReference;
 
 public final class MultiCurrency extends JavaPlugin {
 
@@ -55,6 +59,8 @@ public final class MultiCurrency extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
+        this.saveResource("config.yml", false);
+
         commandManager = new BukkitCommandManager(this);
 
         File dataFolder = new File(getDataFolder(), "data");
@@ -62,15 +68,16 @@ public final class MultiCurrency extends JavaPlugin {
             dataFolder.mkdirs();
 
         databaseManager = new DatabaseManager(this, "data/data.db");
-        databaseManager.initializeConnection();
 
         fileManager = new FileManager();
         currencyManager = new CurrencyManager();
         accountManager = new AccountManager();
 
-        this.getServer().getPluginManager().registerEvents(new JoinLeaveListener(), this);
+        databaseManager.initializeConnection();
 
         initializeDataStore("sqlite", true);
+
+        this.getServer().getPluginManager().registerEvents(new JoinLeaveListener(), this);
 
         inventoryCache = new InventoryCache();
         inventoryManager = new InventoryManager();
@@ -79,12 +86,6 @@ public final class MultiCurrency extends JavaPlugin {
         commandManager.registerCommand(new Command_Economy());
         commandManager.registerCommand(new Command_Pay());
         commandManager.registerCommand(new Command_Main());
-
-        for (Player player : this.getServer().getOnlinePlayers()) {
-            Account account = getDataStore().loadAccount(player.getUniqueId());
-            if (account != null)
-                getAccountManager().addAccount(account);
-        }
     }
 
     @Override
@@ -119,9 +120,20 @@ public final class MultiCurrency extends JavaPlugin {
             if (load) {
                 getLogger().info(Utils.colorize("Loading currencies..."));
                 getDataStore().loadCurrencies();
+                if (getCurrencyManager().getDefaultCurrency() == null) {
+                    getCurrencyManager().getCurrencies().get(0).setDefault(true);
+                    getDataStore().saveCurrency(getCurrencyManager().getCurrencies().get(0));
+                }
                 for (Player player : this.getServer().getOnlinePlayers()) {
-                    Account account = getDataStore().loadAccount(player.getUniqueId());
-                    MultiCurrency.getAccountManager().addAccount(account);
+                    AtomicReference<Account> account = new AtomicReference<>(getDataStore().loadAccount(player.getUniqueId()));
+
+                    if (account.get() == null) {
+                        SchedulerUtils.runAsync(() -> {
+                            account.set(new Account(player.getUniqueId(), player.getName()));
+                        });
+                    }
+
+                    getAccountManager().addAccount(account.get());
                 }
             }
         } catch (Throwable exception) {

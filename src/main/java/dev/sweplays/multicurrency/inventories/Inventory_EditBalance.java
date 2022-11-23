@@ -4,8 +4,10 @@ import dev.sweplays.multicurrency.MultiCurrency;
 import dev.sweplays.multicurrency.account.Account;
 import dev.sweplays.multicurrency.currency.Currency;
 import dev.sweplays.multicurrency.utilities.InventoryType;
+import dev.sweplays.multicurrency.utilities.Messages;
 import dev.sweplays.multicurrency.utilities.Utils;
 import net.wesjd.anvilgui.AnvilGUI;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -40,11 +42,21 @@ public class Inventory_EditBalance {
         anvilGui.onComplete((player, text) -> {
             Inventory_UpdatePlayer inventory_updatePlayer = new Inventory_UpdatePlayer(account);
 
+            Player target = Bukkit.getPlayer(account.getOwnerUuid());
+
             if (type == InventoryType.SET_BALANCE) {
-                if (text.matches("[0-9]+"))
+                if (text.matches("[0-9]+")) {
                     account.updateBalance(currency, Double.parseDouble(text), true);
-                else {
-                    player.sendMessage(Utils.colorize("&cThe text must only container numbers."));
+                    target.sendMessage(Utils.colorize(Messages.SET_SUCCESS_TARGET.get()
+                            .replace("{player}", player.getName())
+                            .replace("{currency}", currency.getSingular())
+                            .replace("{amount}", String.valueOf(Double.parseDouble(text)))
+                            .replace("{symbol}", currency.getSymbol())
+                    ));
+                } else {
+                    player.sendMessage(Utils.colorize(Messages.ONLY_NUMBERS.get()
+                            .replace("{prefix}", Messages.PREFIX.get())
+                    ));
                     anvilGui.open(player);
                     return AnvilGUI.Response.close();
                 }
@@ -52,22 +64,40 @@ public class Inventory_EditBalance {
                 if (text.matches("[0-9]+")) {
                     double finalAmount = account.getBalance(currency) + Double.parseDouble(text);
                     account.updateBalance(currency, finalAmount, true);
+                    target.sendMessage(Utils.colorize(Messages.ADD_SUCCESS_TARGET.get()
+                            .replace("{player}", player.getName())
+                            .replace("{currency}", currency.getSingular())
+                            .replace("{amount}", String.valueOf(Double.parseDouble(text)))
+                            .replace("{symbol}", currency.getSymbol())
+                    ));
                 } else {
-                    player.sendMessage(Utils.colorize("&cThe text must only container numbers."));
+                    player.sendMessage(Utils.colorize(Messages.ONLY_NUMBERS.get()
+                            .replace("{prefix}", Messages.PREFIX.get())
+                    ));
                     anvilGui.open(player);
                     return AnvilGUI.Response.close();
                 }
             } else if (type == InventoryType.REMOVE_BALANCE) {
                 if (text.matches("[0-9]+")) {
                     if (account.getBalance(currency) <= Double.parseDouble(text)) {
-                        player.sendMessage(Utils.colorize("&cBalance cannot go under 0."));
+                        player.sendMessage(Utils.colorize(Messages.UNDER_ZERO.get()
+                                .replace("{prefix}", Messages.PREFIX.get())
+                        ));
                         anvilGui.open(player);
                         return AnvilGUI.Response.close();
                     }
                     double finalAmount = account.getBalance(currency) - Double.parseDouble(text);
                     account.updateBalance(currency, finalAmount, true);
+                    target.sendMessage(Utils.colorize(Messages.REMOVE_SUCCESS_TARGET.get()
+                            .replace("{player}", player.getName())
+                            .replace("{currency}", currency.getSingular())
+                            .replace("{amount}", String.valueOf(Double.parseDouble(text)))
+                            .replace("{symbol}", currency.getSymbol())
+                    ));
                 } else {
-                    player.sendMessage(Utils.colorize("&cThe text must only container numbers."));
+                    player.sendMessage(Utils.colorize(Messages.ONLY_NUMBERS.get()
+                            .replace("{prefix}", Messages.PREFIX.get())
+                    ));
                     anvilGui.open(player);
                     return AnvilGUI.Response.close();
                 }

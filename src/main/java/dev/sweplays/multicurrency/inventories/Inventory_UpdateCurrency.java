@@ -1,9 +1,11 @@
 package dev.sweplays.multicurrency.inventories;
 
 import dev.sweplays.multicurrency.MultiCurrency;
+import dev.sweplays.multicurrency.account.Account;
 import dev.sweplays.multicurrency.currency.Currency;
 import dev.sweplays.multicurrency.inventories.components.ToggleButton;
 import dev.sweplays.multicurrency.utilities.InventoryType;
+import dev.sweplays.multicurrency.utilities.Messages;
 import dev.sweplays.multicurrency.utilities.SchedulerUtils;
 import dev.sweplays.multicurrency.utilities.Utils;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
@@ -39,7 +41,8 @@ public class Inventory_UpdateCurrency {
         gui.setDefaultTopClickAction(event -> event.setCancelled(true));
 
         gui.setCloseGuiAction(event -> {
-            MultiCurrency.getDataStore().saveCurrency(defaultCurrency);
+            if (defaultCurrency != null)
+                MultiCurrency.getDataStore().saveCurrency(defaultCurrency);
             MultiCurrency.getDataStore().saveCurrency(currency);
             SchedulerUtils.runLater(1L, () -> {
                 Inventory_CurrencyList inventoryCurrencyList = new Inventory_CurrencyList();
@@ -106,7 +109,9 @@ public class Inventory_UpdateCurrency {
                 currency.setDefault(true);
                 defaultToggle.toggle();
             } else {
-                event.getWhoClicked().sendMessage(Utils.colorize("&cYou must have a default currency."));
+                event.getWhoClicked().sendMessage(Utils.colorize("{prefix} &cYou must have a default currency.")
+                        .replace("{prefix}", Messages.PREFIX.get())
+                );
                 return;
             }
 
@@ -149,17 +154,25 @@ public class Inventory_UpdateCurrency {
         materialItem.getItemStack().setItemMeta(materialItemMeta);
 
         // Delete
-        AtomicInteger confirmCount = new AtomicInteger();
+        AtomicInteger confirmCount = new AtomicInteger(0);
         GuiItem deleteItem = ItemBuilder.from(Material.BARRIER).asGuiItem(event -> {
             confirmCount.getAndIncrement();
             if (confirmCount.get() == 1) {
-                event.getWhoClicked().sendMessage(Utils.colorize("&cClick one more time to confirm deletion."));
-            }
+                event.getWhoClicked().sendMessage(Utils.colorize("{prefix} &cClick one more time to confirm deletion.")
+                        .replace("{prefix}", Messages.PREFIX.get())
+                );
 
-            if (confirmCount.get() == 2) {
+            } else if (confirmCount.get() == 2) {
                 gui.setCloseGuiAction(event1 -> {
                 });
                 MultiCurrency.getCurrencyManager().deleteCurrency(currency);
+
+                for (Player player : MultiCurrency.getInstance().getServer().getOnlinePlayers())
+                    MultiCurrency.getDataStore().saveAccount(MultiCurrency.getAccountManager().getAccount(player.getUniqueId()));
+
+                if (MultiCurrency.getCurrencyManager().getCurrencies().size() > 0)
+                    MultiCurrency.getCurrencyManager().getCurrencies().get(0).setDefault(true);
+
                 SchedulerUtils.runLater(1L, () -> {
                     new Inventory_CurrencyList().openInventory((Player) event.getWhoClicked());
                 });
@@ -178,7 +191,8 @@ public class Inventory_UpdateCurrency {
 
     public void openInventory(Player player) {
         gui.setCloseGuiAction(event -> {
-            MultiCurrency.getDataStore().saveCurrency(defaultCurrency);
+            if (defaultCurrency != null)
+                MultiCurrency.getDataStore().saveCurrency(defaultCurrency);
             MultiCurrency.getDataStore().saveCurrency(currency);
             SchedulerUtils.runLater(1L, () -> {
                 Inventory_CurrencyList inventoryCurrencyList = new Inventory_CurrencyList();

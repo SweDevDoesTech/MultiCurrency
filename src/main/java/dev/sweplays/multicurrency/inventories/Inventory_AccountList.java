@@ -30,8 +30,6 @@ public class Inventory_AccountList {
             .pageSize(45)
             .create();
 
-    final List<GuiItem> accountItems = Lists.newArrayList();
-
     public Inventory_AccountList() {
         gui.setDefaultTopClickAction(event -> event.setCancelled(true));
 
@@ -45,9 +43,10 @@ public class Inventory_AccountList {
             new Inventory_Search().openInventory((Player) event.getWhoClicked());
         }));
 
+        List<GuiItem> accountItems = new ArrayList<>();
+
         int index = 0;
         for (Account account : MultiCurrency.getAccountManager().getAccounts()) {
-            if (account == null) return;
             
             List<String> accountLore = new ArrayList<>();
             accountLore.add("");

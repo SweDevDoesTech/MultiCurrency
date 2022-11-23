@@ -1,9 +1,11 @@
 package dev.sweplays.multicurrency.inventories;
 
 import dev.sweplays.multicurrency.MultiCurrency;
+import dev.sweplays.multicurrency.account.Account;
 import dev.sweplays.multicurrency.currency.Currency;
 import dev.sweplays.multicurrency.inventories.components.ToggleButton;
 import dev.sweplays.multicurrency.utilities.InventoryType;
+import dev.sweplays.multicurrency.utilities.Messages;
 import dev.sweplays.multicurrency.utilities.SchedulerUtils;
 import dev.sweplays.multicurrency.utilities.Utils;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
@@ -107,7 +109,9 @@ public class Inventory_CreateCurrency {
                     || symbol == null
                     || defaultBalance == null
                     || material == null) {
-                player.sendMessage(Utils.colorize("&cOne or more property is not set. Hover over the beacon to check."));
+                player.sendMessage(Utils.colorize("{prefix} &cOne or more property is not set. Hover over the beacon to check.")
+                        .replace("{prefix}", Messages.PREFIX.get())
+                );
                 return;
             }
 
@@ -117,19 +121,29 @@ public class Inventory_CreateCurrency {
             Currency currency = MultiCurrency.getCurrencyManager().createNewCurrency(singular, plural, symbol, defaultBalance, payable, material);
             if (currency != null) {
                 Currency currency1 = MultiCurrency.getCurrencyManager().getDefaultCurrency();
-                if (currency1 != null) {
+                if (currency1 != null && isDefault) {
                     currency1.setDefault(false);
                     MultiCurrency.getDataStore().saveCurrency(currency1);
                 }
                 currency.setDefault(isDefault);
+                MultiCurrency.getCurrencyManager().add(currency);
                 MultiCurrency.getDataStore().saveCurrency(currency);
                 MultiCurrency.getInventoryCache().clearCache(player);
 
-                player.sendMessage(Utils.colorize("&aSuccessfully created a new currency with name: " + singular + "."));
+                for (Account account : MultiCurrency.getAccountManager().getAccounts()) {
+                    account.updateBalance(currency, currency.getDefaultBalance(), true);
+                }
+
+                player.sendMessage(Utils.colorize(Messages.CREATE_SUCCESS.get()
+                        .replace("{prefix}", Messages.PREFIX.get())
+                        .replace("{currency}", currency.getSingular())
+                ));
 
                 gui.close(player);
             } else {
-                player.sendMessage(Utils.colorize("&cA currency with that name already exists. Please try again but with a different name."));
+                player.sendMessage(Utils.colorize(Messages.CREATE_ERROR.get()
+                        .replace("{prefix}", Messages.PREFIX.get())
+                ));
             }
         });
         ItemMeta createItemMeta = createItem.getItemStack().getItemMeta();

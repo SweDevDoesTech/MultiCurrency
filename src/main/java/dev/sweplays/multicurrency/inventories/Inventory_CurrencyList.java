@@ -77,7 +77,7 @@ public class Inventory_CurrencyList {
     }
 
     public void openInventory(Player player) {
-        gui.setCloseGuiAction(event1 -> SchedulerUtils.runLater(0L, () -> MultiCurrency.getInventoryManager().getMainInventory().openInventory((Player) event1.getPlayer())));
+        gui.setCloseGuiAction(event1 -> SchedulerUtils.runLater(0L, () -> MultiCurrency.getInventoryManager().getMainInventory().openInventory(player)));
         gui.open(player);
     }
 }

@@ -35,10 +35,12 @@ public class Command_Balance extends BaseCommand {
 
         Account account = MultiCurrency.getAccountManager().getAccount(player.getUniqueId());
 
-        if (args.length == 0) {
+        if (args.length == 0 && player.hasPermission("multicurrency.command.balance")) {
             Currency currency = MultiCurrency.getCurrencyManager().getDefaultCurrency();
             if (currency == null) {
-                player.sendMessage(Utils.colorize("&cNo default currency exists. Please contact an admin."));
+                player.sendMessage(Utils.colorize(Messages.NO_DEFAULT_CURRENCY.get()
+                        .replace("{prefix}", Messages.PREFIX.get())
+                ));
                 return;
             }
             player.sendMessage(Utils.colorize(Messages.BALANCE.get()
@@ -50,13 +52,15 @@ public class Command_Balance extends BaseCommand {
             ));
 
 
-        } else if (args.length == 1) {
+        } else if (args.length == 1 && player.hasPermission("multicurrency.command.balance")) {
             Currency currency = MultiCurrency.getCurrencyManager().getCurrency(args[0]);
             if (currency == null) {
-                player.sendMessage(Utils.colorize("&cCurrency " + args[0] + " does not exist."));
+                player.sendMessage(Utils.colorize(Messages.CURRENCY_NOT_FOUND.get()
+                        .replace("{currency}", args[0])
+                ));
                 return;
             }
-            player.sendMessage(Utils.colorize(Messages.SET_SUCCESS.get()
+            player.sendMessage(Utils.colorize(Messages.BALANCE.get()
                     .replace("{prefix}", Messages.PREFIX.get())
                     .replace("{symbol}", currency.getSymbol())
                     .replace("{currency}", account.getBalance(currency) <= 1 ? currency.getSingular() : currency.getPlural())
@@ -64,15 +68,19 @@ public class Command_Balance extends BaseCommand {
                     .replace("{player}", player.getName())
             ));
 
-        } else if (args.length == 2) {
+        } else if (args.length == 2 && player.hasPermission("multicurrency.command.balance.other")) {
             Currency currency = MultiCurrency.getCurrencyManager().getCurrency(args[0]);
             if (currency == null) {
-                player.sendMessage(Utils.colorize("&cCurrency " + args[0] + " does not exist."));
+                player.sendMessage(Utils.colorize(Messages.CURRENCY_NOT_FOUND.get()
+                        .replace("{currency}", args[0])
+                ));
                 return;
             }
             Player target = Bukkit.getPlayer(args[1]);
             if (target == null) {
-                player.sendMessage(Utils.colorize("&cPlayer " + args[1] + " was not found."));
+                player.sendMessage(Utils.colorize(Messages.PLAYER_NOT_FOUND.get()
+                        .replace("{target}", args[1])
+                ));
                 return;
             }
             Account targetAccount = MultiCurrency.getAccountManager().getAccount(target.getUniqueId());
@@ -82,6 +90,10 @@ public class Command_Balance extends BaseCommand {
                     .replace("{currency}", targetAccount.getBalance(currency) <= 1 ? currency.getSingular() : currency.getPlural())
                     .replace("{amount}", String.valueOf(targetAccount.getBalance(currency)))
                     .replace("{target}", target.getName())
+            ));
+        } else if (!player.hasPermission("multicurrency.command.balance") || !player.hasPermission("multicurrency.command.balance.other")) {
+            player.sendMessage(Utils.colorize(Messages.NO_PERMISSION.get()
+                    .replace("{prefix}", Messages.PREFIX.get())
             ));
         }
     }

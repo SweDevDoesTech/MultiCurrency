@@ -1,0 +1,3 @@
+message-options:
+  account-messages: false
+  currency-messages: true

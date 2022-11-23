@@ -2,6 +2,7 @@ package dev.sweplays.multicurrency.inventories;
 
 import dev.sweplays.multicurrency.MultiCurrency;
 import dev.sweplays.multicurrency.account.Account;
+import dev.sweplays.multicurrency.utilities.Messages;
 import dev.sweplays.multicurrency.utilities.Utils;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
@@ -39,7 +40,9 @@ public class Inventory_Search {
         anvilGui.onComplete((player, text) -> {
             Player target = Bukkit.getPlayer(text);
             if (target == null) {
-                player.sendMessage(Utils.colorize("&cCould not find a player with that name."));
+                player.sendMessage(Utils.colorize(Messages.PLAYER_NOT_FOUND.get()
+                        .replace("{target}", text)
+                ));
                 anvilGui.open(player);
                 return AnvilGUI.Response.close();
             }

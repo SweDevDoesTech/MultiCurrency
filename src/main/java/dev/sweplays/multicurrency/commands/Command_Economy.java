@@ -24,7 +24,9 @@ public class Command_Economy extends BaseCommand {
         if (args.length == 3 && args[0].equalsIgnoreCase("set") && player.hasPermission("multicurrency.command.economy.set")) {
             Currency currency = MultiCurrency.getCurrencyManager().getCurrency(args[1]);
             if (currency == null) {
-                player.sendMessage(Utils.colorize("&cCurrency " + args[1] + " does not exist."));
+                player.sendMessage(Utils.colorize(Messages.CURRENCY_NOT_FOUND.get()
+                        .replace("{currency}", args[1])
+                ));
                 return;
             }
             Account account = MultiCurrency.getAccountManager().getAccount(player.getUniqueId());
@@ -41,12 +43,16 @@ public class Command_Economy extends BaseCommand {
         } else if (args.length == 4 && args[0].equalsIgnoreCase("set") && player.hasPermission("multicurrency.command.economy.set")) {
             Player target = Bukkit.getPlayer(args[1]);
             if (target == null) {
-                player.sendMessage(Utils.colorize("&cPlayer " + args[1] + " was not found."));
+                player.sendMessage(Utils.colorize(Messages.PLAYER_NOT_FOUND.get()
+                        .replace("{target}", args[1])
+                ));
                 return;
             }
             Currency currency = MultiCurrency.getCurrencyManager().getCurrency(args[2]);
             if (currency == null) {
-                player.sendMessage(Utils.colorize("&cCurrency " + args[2] + " does not exist."));
+                player.sendMessage(Utils.colorize(Messages.CURRENCY_NOT_FOUND.get()
+                        .replace("{currency}", args[2])
+                ));
                 return;
             }
             Account targetAccount = MultiCurrency.getAccountManager().getAccount(target.getUniqueId());
@@ -71,7 +77,9 @@ public class Command_Economy extends BaseCommand {
         } else if (args.length == 3 && args[0].equalsIgnoreCase("add") && player.hasPermission("multicurrency.command.economy.add")) {
             Currency currency = MultiCurrency.getCurrencyManager().getCurrency(args[1]);
             if (currency == null) {
-                player.sendMessage(Utils.colorize("&cCurrency " + args[1] + " does not exist."));
+                player.sendMessage(Utils.colorize(Messages.CURRENCY_NOT_FOUND.get()
+                        .replace("{currency}", args[1])
+                ));
                 return;
             }
             Account account = MultiCurrency.getAccountManager().getAccount(player.getUniqueId());
@@ -90,12 +98,16 @@ public class Command_Economy extends BaseCommand {
         } else if (args.length == 4 && args[0].equalsIgnoreCase("add") && player.hasPermission("multicurrency.command.economy.remove")) {
             Player target = Bukkit.getPlayer(args[1]);
             if (target == null) {
-                player.sendMessage(Utils.colorize("&cPlayer " + args[1] + " was not found."));
+                player.sendMessage(Utils.colorize(Messages.PLAYER_NOT_FOUND.get()
+                        .replace("{target}", args[1])
+                ));
                 return;
             }
             Currency currency = MultiCurrency.getCurrencyManager().getCurrency(args[2]);
             if (currency == null) {
-                player.sendMessage(Utils.colorize("&cCurrency " + args[2] + " does not exist."));
+                player.sendMessage(Utils.colorize(Messages.CURRENCY_NOT_FOUND.get()
+                        .replace("{currency}", args[2])
+                ));
                 return;
             }
             Account targetAccount = MultiCurrency.getAccountManager().getAccount(target.getUniqueId());
@@ -123,7 +135,9 @@ public class Command_Economy extends BaseCommand {
         } else if (args.length == 3 && args[0].equalsIgnoreCase("remove") && player.hasPermission("multicurrency.command.economy.remove")) {
             Currency currency = MultiCurrency.getCurrencyManager().getCurrency(args[1]);
             if (currency == null) {
-                player.sendMessage(Utils.colorize("&cCurrency " + args[1] + " does not exist."));
+                player.sendMessage(Utils.colorize(Messages.CURRENCY_NOT_FOUND.get()
+                        .replace("{currency}", args[1])
+                ));
                 return;
             }
             Account account = MultiCurrency.getAccountManager().getAccount(player.getUniqueId());
@@ -141,12 +155,16 @@ public class Command_Economy extends BaseCommand {
         } else if (args.length == 4 && args[0].equalsIgnoreCase("remove") && player.hasPermission("multicurrency.command.economy.remove")) {
             Player target = Bukkit.getPlayer(args[1]);
             if (target == null) {
-                player.sendMessage(Utils.colorize("&cPlayer " + args[1] + " was not found."));
+                player.sendMessage(Utils.colorize(Messages.PLAYER_NOT_FOUND.get()
+                        .replace("{target}", args[1])
+                ));
                 return;
             }
             Currency currency = MultiCurrency.getCurrencyManager().getCurrency(args[2]);
             if (currency == null) {
-                player.sendMessage(Utils.colorize("&cCurrency " + args[2] + " does not exist."));
+                player.sendMessage(Utils.colorize(Messages.CURRENCY_NOT_FOUND.get()
+                        .replace("{currency}", args[2])
+                ));
                 return;
             }
             Account targetAccount = MultiCurrency.getAccountManager().getAccount(target.getUniqueId());

@@ -1,10 +1,12 @@
 package dev.sweplays.multicurrency.data;
 
+import com.google.gson.JsonElement;
 import dev.sweplays.multicurrency.MultiCurrency;
 import dev.sweplays.multicurrency.account.Account;
 import dev.sweplays.multicurrency.currency.Currency;
 
 import org.bukkit.Material;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -43,13 +45,14 @@ public class SQLiteStorage extends DataStore {
 
             JSONObject jsonObject = new JSONObject();
             for (Currency currency : MultiCurrency.getCurrencyManager().getCurrencies()) {
-                jsonObject.put(currency.getUuid().toString(), account.getBalance(currency.getSingular()));
+                jsonObject.put(currency.getUuid().toString(), account.getBalance(currency));
             }
             String json = jsonObject.toJSONString();
             statement.setString(4, json);
             statement.executeUpdate();
 
-            MultiCurrency.getInstance().getLogger().info("Saved account: " + account.getOwnerName());
+            if (MultiCurrency.getInstance().getConfig().getBoolean("message-options.account-messages"))
+                MultiCurrency.getInstance().getLogger().info("Saved account: " + account.getOwnerName());
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -62,6 +65,38 @@ public class SQLiteStorage extends DataStore {
             statement.setString(1, account.getOwnerUuid().toString());
             statement.executeUpdate();
         } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    @Override
+    public void deleteBalance(Account account, Currency currency) {
+        try {
+            PreparedStatement statement = databaseManager.getPreparedStatement("SELECT * FROM balances WHERE uuid = ?");
+            statement.setString(1, account.getOwnerUuid().toString());
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                String json = resultSet.getString("balanceData");
+
+                if (json == null) {
+                    return;
+                }
+
+                JSONParser parser = new JSONParser();
+
+                Object object = parser.parse(json);
+                JSONArray jsonArray = (JSONArray) object;
+
+                for (int i = 0; i < jsonArray.size(); i++) {
+                    JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                    Set<Map.Entry<String, JsonElement>> entries = jsonObject.entrySet();
+                    for (Map.Entry<String, JsonElement> entry : entries) {
+
+                    }
+                }
+            }
+
+        } catch (ParseException | SQLException exception) {
             exception.printStackTrace();
         }
     }
@@ -108,7 +143,9 @@ public class SQLiteStorage extends DataStore {
                 currency.setInventoryMaterial(material);
 
                 MultiCurrency.getCurrencyManager().add(currency);
-                MultiCurrency.getInstance().getLogger().info("Loaded currency: " + currency.getSingular());
+
+                if (MultiCurrency.getInstance().getConfig().getBoolean("message-options.currency-messages"))
+                    MultiCurrency.getInstance().getLogger().info("Loaded currency: " + currency.getSingular());
             }
         } catch (SQLException exception) {
             exception.printStackTrace();
@@ -121,7 +158,8 @@ public class SQLiteStorage extends DataStore {
             PreparedStatement statement = databaseManager.getPreparedStatement("DELETE FROM currencies WHERE uuid = ?");
             statement.setString(1, currency.getUuid().toString());
             statement.executeUpdate();
-            MultiCurrency.getInstance().getLogger().info("Deleted currency: " + currency.getSingular());
+            if (MultiCurrency.getInstance().getConfig().getBoolean("message-options.currency-messages"))
+                MultiCurrency.getInstance().getLogger().info("Deleted currency: " + currency.getSingular());
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -197,7 +235,8 @@ public class SQLiteStorage extends DataStore {
             statement.setString(8, currency.getInventoryMaterial().toString());
             statement.execute();
 
-            MultiCurrency.getInstance().getLogger().info("Saved currency: " + currency.getSingular());
+            if (MultiCurrency.getInstance().getConfig().getBoolean("message-options.currency-messages"))
+                MultiCurrency.getInstance().getLogger().info("Saved currency: " + currency.getSingular());
         } catch (SQLException exception) {
             exception.printStackTrace();
         }

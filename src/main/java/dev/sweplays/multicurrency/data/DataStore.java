@@ -38,6 +38,8 @@ public abstract class DataStore {
 
     public abstract void deleteAccount(Account account);
 
+    public abstract void deleteBalance(Account account, Currency currency);
+
     public abstract void createAccount(Account account);
 
     public abstract void loadCurrencies();

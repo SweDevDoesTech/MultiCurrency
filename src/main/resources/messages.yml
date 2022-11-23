@@ -8,6 +8,10 @@
 plugin:
   prefix: "&fMulti&6Currency &7>"
   no-permission: "{prefix} &cYou do not have permission to execute this command."
+  error: "{prefix} &cAn unknown occurred. Please contact an admin."
+
+commands:
+  pay-usage: "{prefix} &cUsage: /pay <player|toggle> <currency> <amount>"
 
 currency:
   add:
@@ -27,10 +31,24 @@ currency:
 
   pay:
     success: "{prefix} &7{amount}{symbol} &aof {currency} &ahas been sent to &7{target}&a."
-    success-target: "{prefix} &aYou received &7{amount}{symbol} &aof &7{currency} &afrom &7{player}&a."
-    error: "{prefix} &cMinimum payment amount is &70{symbol}&c."
-    not-enough: "{prefix} &cYou don't have enough {currency_}"
+    success-target: "{prefix} &aReceived &7{amount}{symbol} &aof &7{currency} &afrom &7{player}&a."
+    not-enough: "{prefix} &cYou don't have enough {currency}"
 
-  balance: "{prefix} &aYou have &7{amount}{symbol} &aof &7{currency}&a.)"
-  balance-target: "{prefix} &7{target} &ahas &7{amount} &aof &7{currency}&a."
+  balance: "{prefix} &aYou have &7{amount}{symbol} {currency}&a."
+  balance-target: "{prefix} &7{target} &ahas &7{amount}{symbol} {currency}&a."
+
   no-default-currency: "{prefix} &cNo default currency exists. Please contact an admin."
+  currency-not-found: "{prefix} &cCurrency &7{currency} &cnot found."
+  player-not-found: "{prefix} &cPlayer &7{target} &cnot found."
+
+  payments-on: "{prefix} &aYou can now receive payments from others."
+  payments-off: "{prefix} &aYou can no longer receive payments from others."
+  target-payments-off: "{prefix} &7{target} &cis not accepting payments."
+  minimum-payment: "{prefix} &cMinimum payment amount is &7{amount}{symbol}&c."
+
+  create-success: "{prefix} &aSuccessfully created a new currency named &7{currency}&a."
+  create-error: "{prefix} &cA currency with that name already exists. Please try again but with a different name."
+
+  only-numbers: "{prefix} &cThe text must only contain numbers."
+
+  under-zero: "{prefix} &cBalance cannot go under 0."

@@ -3,6 +3,7 @@ package dev.sweplays.multicurrency.inventories;
 import dev.sweplays.multicurrency.MultiCurrency;
 import dev.sweplays.multicurrency.currency.Currency;
 import dev.sweplays.multicurrency.utilities.InventoryType;
+import dev.sweplays.multicurrency.utilities.Messages;
 import dev.sweplays.multicurrency.utilities.Utils;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Material;
@@ -21,40 +22,32 @@ public class Inventory_Update {
         anvilGui = new AnvilGUI.Builder();
         anvilGui.plugin(MultiCurrency.getInstance());
 
-        if (type == InventoryType.UPDATE_SINGULAR)
-            anvilGui.title("Enter Singular Name");
-
-        else if (type == InventoryType.UPDATE_PLURAL)
-            anvilGui.title("Enter Plural Name");
-
-        else if (type == InventoryType.UPDATE_SYMBOL)
-            anvilGui.title("Enter Symbol");
-
-        else if (type == InventoryType.UPDATE_DEFAULT_BALANCE)
-            anvilGui.title("Enter Default Balance");
-
         List<String> itemLeftLore = new ArrayList<>();
         itemLeftLore.add("");
-
-        itemLeftLore.add(Utils.colorize("&7Enter name above."));
         itemLeftLore.add("");
 
         ItemStack itemLeft = new ItemStack(Material.PAPER);
         ItemMeta itemLeftMeta = itemLeft.getItemMeta();
-        if (type == InventoryType.SET_SINGULAR)
-            itemLeftLore.add(Utils.colorize("&7Enter singular above."));
-
-        else if (type == InventoryType.SET_PLURAL)
-            itemLeftLore.add(Utils.colorize("&7Enter plural above."));
-
-        else if (type == InventoryType.SET_SYMBOL)
-            itemLeftLore.add(Utils.colorize("&7Enter symbol above."));
-
-        else if (type == InventoryType.SET_DEFAULT_BALANCE)
-            itemLeftLore.add(Utils.colorize("&7Enter default balance above."));
-
         assert itemLeftMeta != null;
+        if (type == InventoryType.UPDATE_SINGULAR) {
+            anvilGui.title("Enter Singular Name");
+            itemLeftLore.add(Utils.colorize("&7Enter singular above."));
+        }
+        else if (type == InventoryType.UPDATE_PLURAL) {
+            anvilGui.title("Enter Plural Name");
+            itemLeftLore.add(Utils.colorize("&7Enter plural above."));
+        }
+        else if (type == InventoryType.UPDATE_SYMBOL) {
+            anvilGui.title("Enter Symbol");
+            itemLeftLore.add(Utils.colorize("&7Enter symbol above."));
+        }
+        else if (type == InventoryType.UPDATE_DEFAULT_BALANCE) {
+            anvilGui.title("Enter Default Balance");
+            itemLeftLore.add(Utils.colorize("&7Enter default balance above."));
+        }
+
         itemLeftMeta.setLore(itemLeftLore);
+        itemLeftMeta.setDisplayName(Utils.colorize("&7Enter Above."));
         itemLeft.setItemMeta(itemLeftMeta);
 
         anvilGui.itemLeft(itemLeft);
@@ -64,7 +57,9 @@ public class Inventory_Update {
 
             for (Currency currency1 : MultiCurrency.getCurrencyManager().getCurrencies()) {
                 if (currency1.getSingular().equals(text)) {
-                    player.sendMessage(Utils.colorize("&cA currency with this name already exists."));
+                    player.sendMessage(Utils.colorize(Messages.CREATE_ERROR.get()
+                            .replace("{prefix}", Messages.PREFIX.get())
+                    ));
                     return AnvilGUI.Response.openInventory(anvilGui.open(player).getInventory());
                 }
             }
@@ -81,7 +76,9 @@ public class Inventory_Update {
                 if (text.matches("[0-9]+"))
                     currency.setDefaultBalance(Double.parseDouble(text));
                 else {
-                    player.sendMessage(Utils.colorize("&cThe text must only container numbers."));
+                    player.sendMessage(Utils.colorize(Messages.ONLY_NUMBERS.get()
+                            .replace("{prefix}", Messages.PREFIX.get())
+                    ));
                     anvilGui.open(player);
                     return AnvilGUI.Response.close();
                 }

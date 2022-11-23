@@ -7,6 +7,7 @@ import co.aikar.commands.annotation.Subcommand;
 import dev.sweplays.multicurrency.MultiCurrency;
 import dev.sweplays.multicurrency.account.Account;
 import dev.sweplays.multicurrency.currency.Currency;
+import dev.sweplays.multicurrency.utilities.Messages;
 import dev.sweplays.multicurrency.utilities.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,22 +16,15 @@ import org.bukkit.entity.Player;
 public class Command_Main extends BaseCommand {
 
     @Default
-    @Subcommand("save")
     public void onCommand(CommandSender sender, String[] args) {
         if (!(sender instanceof Player player)) return;
 
         if (args.length == 0 && player.hasPermission("multicurrency.command.multicurrency"))
             MultiCurrency.getInventoryManager().getMainInventory().openInventory(player);
-
-        else if (args.length == 1 && args[0].equalsIgnoreCase("save") && player.hasPermission("multicurrency.command.multicurrency.save")) {
-            for (Currency currency : MultiCurrency.getCurrencyManager().getCurrencies()) {
-                MultiCurrency.getDataStore().saveCurrency(currency);
-            }
-
-            for (Account account : MultiCurrency.getAccountManager().getAccounts()) {
-                MultiCurrency.getDataStore().saveAccount(account);
-            }
-            player.sendMessage(Utils.colorize("&aSuccessfully saved all currencies and accounts."));
+        else if (!player.hasPermission("multicurrency.command.multicurrency")) {
+            player.sendMessage(Utils.colorize(Messages.NO_PERMISSION.get()
+                    .replace("{prefix}", Messages.PREFIX.get())
+            ));
         }
     }
 }

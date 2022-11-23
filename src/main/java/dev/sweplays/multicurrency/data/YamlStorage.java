@@ -33,6 +33,11 @@ public class YamlStorage extends DataStore {
     }
 
     @Override
+    public void deleteBalance(Account account, Currency currency) {
+
+    }
+
+    @Override
     public void createAccount(Account account) {
 
     }

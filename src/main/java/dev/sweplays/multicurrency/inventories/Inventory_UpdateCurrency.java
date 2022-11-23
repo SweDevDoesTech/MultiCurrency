@@ -1,7 +1,6 @@
 package dev.sweplays.multicurrency.inventories;
 
 import dev.sweplays.multicurrency.MultiCurrency;
-import dev.sweplays.multicurrency.account.Account;
 import dev.sweplays.multicurrency.currency.Currency;
 import dev.sweplays.multicurrency.inventories.components.ToggleButton;
 import dev.sweplays.multicurrency.utilities.InventoryType;

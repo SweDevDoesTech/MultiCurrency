@@ -1,6 +1,5 @@
 package dev.sweplays.multicurrency.inventories;
 
-import com.google.common.collect.Lists;
 import dev.sweplays.multicurrency.MultiCurrency;
 import dev.sweplays.multicurrency.account.Account;
 import dev.sweplays.multicurrency.currency.Currency;

@@ -47,7 +47,7 @@ public class JoinLeaveListener implements Listener {
         Player player = event.getPlayer();
 
         SchedulerUtils.runLater(40L, () -> {
-            if (MultiCurrency.getCurrencyManager().getDefaultCurrency() == null && (player.isOp() || player.hasPermission("multicurrency.command.currency"))) {
+            if (MultiCurrency.getCurrencyManager().getDefaultCurrency() == null && (player.isOp() || player.hasPermission("multicurrency.command.multicurrency"))) {
                 player.sendMessage(Utils.colorize("{prefix} &cYou have not made a currency yet. Please do so by typing /multicurrency.")
                         .replace("{prefix}", Messages.PREFIX.get())
                 );

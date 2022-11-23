@@ -72,9 +72,11 @@ public class MultiCurrencyAPI {
      */
     public void give(Player player, Double amount) {
         Account account = accountManager.getAccount(player.getUniqueId());
+        Currency currency = currencyManager.getDefaultCurrency();
         if (account == null) return;
-        double finalAmount = account.getBalance(currencyManager.getDefaultCurrency()) + amount;
-        account.updateBalance(currencyManager.getDefaultCurrency(), finalAmount, true);
+        if (currency == null) return;
+        double finalAmount = account.getBalance(currency) + amount;
+        account.updateBalance(currency, finalAmount, true);
     }
 
     /**
@@ -97,9 +99,11 @@ public class MultiCurrencyAPI {
      */
     public void take(Player player, Double amount) {
         Account account = accountManager.getAccount(player.getUniqueId());
+        Currency currency = currencyManager.getDefaultCurrency();
         if (account == null) return;
-        double finalAmount = account.getBalance(currencyManager.getDefaultCurrency()) + amount;
-        account.updateBalance(currencyManager.getDefaultCurrency(), finalAmount, true);
+        if (currency == null) return;
+        double finalAmount = account.getBalance(currency) + amount;
+        account.updateBalance(currency, finalAmount, true);
     }
 
     /**

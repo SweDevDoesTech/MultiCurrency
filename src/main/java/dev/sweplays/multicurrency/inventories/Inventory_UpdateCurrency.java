@@ -102,10 +102,10 @@ public class Inventory_UpdateCurrency {
         ToggleButton defaultToggle = new ToggleButton(24, false);
         defaultToggle.setEnabled(currency.isDefault());
         GuiItem defaultItem = ItemBuilder.from(new ItemStack(Material.GOLD_INGOT)).asGuiItem(event -> {
-            if (defaultCurrency != null)
-                defaultCurrency.setDefault(false);
             if (!defaultToggle.isEnabled()) {
                 currency.setDefault(true);
+                if (defaultCurrency != null)
+                    defaultCurrency.setDefault(false);
                 defaultToggle.toggle();
             } else {
                 event.getWhoClicked().sendMessage(Utils.colorize("{prefix} &cYou must have a default currency.")

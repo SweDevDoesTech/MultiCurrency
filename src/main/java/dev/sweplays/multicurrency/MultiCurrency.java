@@ -7,6 +7,7 @@ import dev.sweplays.multicurrency.commands.Command_Balance;
 import dev.sweplays.multicurrency.commands.Command_Economy;
 import dev.sweplays.multicurrency.commands.Command_Main;
 import dev.sweplays.multicurrency.commands.Command_Pay;
+import dev.sweplays.multicurrency.currency.Currency;
 import dev.sweplays.multicurrency.currency.CurrencyManager;
 import dev.sweplays.multicurrency.data.DataStore;
 import dev.sweplays.multicurrency.data.DatabaseManager;
@@ -118,20 +119,22 @@ public final class MultiCurrency extends JavaPlugin {
             if (load) {
                 getLogger().info(Utils.colorize("Loading currencies..."));
                 getDataStore().loadCurrencies();
-                if (getCurrencyManager().getDefaultCurrency() == null) {
+                if (getCurrencyManager().getDefaultCurrency() == null && getCurrencyManager().getCurrencies().size() != 0) {
                     getCurrencyManager().getCurrencies().get(0).setDefault(true);
                     getDataStore().saveCurrency(getCurrencyManager().getCurrencies().get(0));
                 }
                 for (Player player : this.getServer().getOnlinePlayers()) {
-                    AtomicReference<Account> account = new AtomicReference<>(getDataStore().loadAccount(player.getUniqueId()));
+                    Account account = getDataStore().loadAccount(player.getUniqueId());
 
-                    if (account.get() == null) {
-                        SchedulerUtils.runAsync(() -> {
-                            account.set(new Account(player.getUniqueId(), player.getName()));
-                        });
+                    if (account == null) {
+                        account = new Account(player.getUniqueId(), player.getName());
+                        for (Currency currency : getCurrencyManager().getCurrencies()) {
+                            account.getBalances().put(currency, currency.getDefaultBalance());
+                        }
                     }
 
-                    getAccountManager().addAccount(account.get());
+                    getAccountManager().addAccount(account);
+                    getDataStore().saveAccount(account);
                 }
             }
         } catch (Throwable exception) {

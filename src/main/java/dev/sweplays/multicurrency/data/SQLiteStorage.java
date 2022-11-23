@@ -266,11 +266,13 @@ public class SQLiteStorage extends DataStore {
                 JSONObject data = (JSONObject) object;
 
                 for (Currency currency : MultiCurrency.getCurrencyManager().getCurrencies()) {
-                    Number amount = (Number) data.get(currency.getUuid().toString());
-                    if (amount != null) {
-                        account.getBalances().put(currency, amount.doubleValue());
-                    } else {
-                        account.getBalances().put(currency, currency.getDefaultBalance());
+                    if (currency != null) {
+                        Number amount = (Number) data.get(currency.getUuid().toString());
+                        if (amount != null) {
+                            account.getBalances().put(currency, amount.doubleValue());
+                        } else {
+                            account.getBalances().put(currency, currency.getDefaultBalance());
+                        }
                     }
                 }
             }

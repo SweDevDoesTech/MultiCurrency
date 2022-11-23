@@ -93,9 +93,6 @@ public class Inventory_CreateCurrency {
         createItemLore.add(Utils.colorize(""));
 
         createItem = ItemBuilder.from(Material.BEACON).asGuiItem(event -> {
-            gui.setCloseGuiAction(event1 -> {
-            });
-
             String singular = MultiCurrency.getInventoryCache().getCurrencySingular().get(player);
             String plural = MultiCurrency.getInventoryCache().getCurrencyPlural().get(player);
             String symbol = MultiCurrency.getInventoryCache().getSymbol().get(player);
@@ -138,6 +135,9 @@ public class Inventory_CreateCurrency {
                         .replace("{prefix}", Messages.PREFIX.get())
                         .replace("{currency}", currency.getSingular())
                 ));
+
+                gui.setCloseGuiAction(event1 -> {
+                });
 
                 gui.close(player);
             } else {

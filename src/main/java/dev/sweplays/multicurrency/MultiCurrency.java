@@ -89,6 +89,9 @@ public final class MultiCurrency extends JavaPlugin {
 
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new PlaceholderExpansion(this).register();
+            getLogger().warning("PlaceholderAPI found!");
+        } else {
+            getLogger().warning("PlaceholderAPI not found...");
         }
     }
 

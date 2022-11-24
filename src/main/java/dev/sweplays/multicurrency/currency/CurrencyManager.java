@@ -35,7 +35,7 @@ public class CurrencyManager {
 
     public Currency getCurrency(String name) {
         for (Currency currency : currencies) {
-            if (!currency.getSingular().equals(name)) continue;
+            if (!currency.getSingular().equalsIgnoreCase(name)) continue;
             return currency;
         }
         return null;

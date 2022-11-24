@@ -16,16 +16,17 @@ import dev.sweplays.multicurrency.files.FileManager;
 import dev.sweplays.multicurrency.inventories.InventoryCache;
 import dev.sweplays.multicurrency.inventories.InventoryManager;
 import dev.sweplays.multicurrency.listeners.JoinLeaveListener;
-import dev.sweplays.multicurrency.utilities.SchedulerUtils;
+import dev.sweplays.multicurrency.papi.PlaceholderExpansion;
 import dev.sweplays.multicurrency.utilities.Utils;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.concurrent.atomic.AtomicReference;
 
 public final class MultiCurrency extends JavaPlugin {
+
+    public static final String version = "1.0.0";
 
     @Getter
     private static MultiCurrency instance;
@@ -85,6 +86,10 @@ public final class MultiCurrency extends JavaPlugin {
         commandManager.registerCommand(new Command_Economy());
         commandManager.registerCommand(new Command_Pay());
         commandManager.registerCommand(new Command_Main());
+
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new PlaceholderExpansion(this).register();
+        }
     }
 
     @Override

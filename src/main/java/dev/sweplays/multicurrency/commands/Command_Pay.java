@@ -83,6 +83,13 @@ public class Command_Pay extends BaseCommand {
             }
 
             if (targetAccount.getBalance(currency) > 0) {
+                if (!args[2].matches("[0-9]+")) {
+                    player.sendMessage(Utils.colorize(Messages.ONLY_NUMBERS.get()
+                            .replace("{prefix}", Messages.PREFIX.get())
+                    ));
+                    return;
+                }
+
                 double amount = Double.parseDouble(args[2]);
 
                 if (amount <= 0) {
@@ -100,14 +107,14 @@ public class Command_Pay extends BaseCommand {
                 senderAccount.updateBalance(currency, finalAmountSender, true);
                 targetAccount.updateBalance(currency, finalAmountTarget, true);
 
-                player.sendMessage(Utils.colorize(Messages.PAY_SUCCESS.get()
+                player.sendMessage(Utils.colorize(Messages.PAY_SUCCESS.get(amount)
                         .replace("{prefix}", Messages.PREFIX.get())
                         .replace("{symbol}", currency.getSymbol())
                         .replace("{currency}", targetAccount.getBalance(currency) <= 1 ? currency.getSingular() : currency.getPlural())
                         .replace("{amount}", String.valueOf(amount))
                         .replace("{target}", target.getName())
                 ));
-                target.sendMessage(Utils.colorize(Messages.PAY_SUCCESS_TARGET.get()
+                target.sendMessage(Utils.colorize(Messages.PAY_SUCCESS_TARGET.get(amount)
                         .replace("{prefix}", Messages.PREFIX.get())
                         .replace("{symbol}", currency.getSymbol())
                         .replace("{currency}", targetAccount.getBalance(currency) <= 1 ? currency.getSingular() : currency.getPlural())

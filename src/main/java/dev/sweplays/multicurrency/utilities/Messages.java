@@ -63,8 +63,21 @@ public enum Messages {
                 .replace("{prefix}", PREFIX.getRaw());
     }
 
+    private String getReplaced(Double amount) {
+        if (MultiCurrency.getInstance().getConfig().getBoolean("message-options.abbreviated-numbers"))
+            return MultiCurrency.getFileManager().getMessagesFile().getYamlConfiguration().getString(path)
+                    .replace("{prefix}", PREFIX.getRaw())
+                    .replace("{amount}", Utils.format(amount));
+        else
+            return getReplaced();
+    }
+
     public String get() {
         return Utils.colorize(getReplaced());
+    }
+
+    public String get(Double amount) {
+        return Utils.colorize(getReplaced(amount));
     }
 
     public String get(Object... args) {

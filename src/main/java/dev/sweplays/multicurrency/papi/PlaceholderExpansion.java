@@ -4,9 +4,7 @@ import dev.sweplays.multicurrency.MultiCurrency;
 import dev.sweplays.multicurrency.account.Account;
 import dev.sweplays.multicurrency.currency.Currency;
 import dev.sweplays.multicurrency.utilities.Utils;
-import me.clip.placeholderapi.expansion.Relational;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class PlaceholderExpansion extends me.clip.placeholderapi.expansion.PlaceholderExpansion {
@@ -54,6 +52,14 @@ public class PlaceholderExpansion extends me.clip.placeholderapi.expansion.Place
             String amount = "";
             return amount + defaultCurrency.getSymbol() + Math.round(account.getBalance(defaultCurrency));
 
+        } else if (params.equalsIgnoreCase("balance_default_nosymbol")) {
+            if (defaultCurrency == null) {
+                return "No default currency found.";
+            }
+
+            String amount = "";
+            return amount + Math.round(account.getBalance(defaultCurrency));
+
         } else if (params.equalsIgnoreCase("balance_default_formatted")) {
             if (defaultCurrency == null) {
                 return "No default currency found.";
@@ -61,6 +67,14 @@ public class PlaceholderExpansion extends me.clip.placeholderapi.expansion.Place
 
             String amount = "";
             return amount + defaultCurrency.getSymbol() + Utils.format(account.getBalance(defaultCurrency));
+
+        } else if (params.equalsIgnoreCase("balance_default_formatted_nosymbol")) {
+            if (defaultCurrency == null) {
+                return "No default currency found.";
+            }
+
+            String amount = "";
+            return amount + Utils.format(account.getBalance(defaultCurrency));
 
         } else if (params.startsWith("balance_") || !params.startsWith("balance_default")) {
             String[] currencyArray = params.split("_");
@@ -70,11 +84,32 @@ public class PlaceholderExpansion extends me.clip.placeholderapi.expansion.Place
             if (params.equalsIgnoreCase("balance_" + currency.getSingular() + "_formatted")) {
                 String amount = "";
                 return amount + currency.getSymbol() + Utils.format(account.getBalance(currency));
+
+            } else if (params.equalsIgnoreCase("balance_" + currency.getSingular() + "_formatted_nosymbol")) {
+                String amount = "";
+                return amount + Utils.format(account.getBalance(currency));
+
             } else if (params.equalsIgnoreCase("balance_" + currency.getSingular())) {
                 String amount = "";
                 return amount + currency.getSymbol() + Math.round(account.getBalance(currency));
+
+            } else if (params.equalsIgnoreCase("balance_" + currency.getSingular() + "_nosymbol")) {
+                String amount = "";
+                return amount + Math.round(account.getBalance(currency));
             }
         }
+        /*
+                            Placeholders
+
+        multicurrency_balance_default
+        multicurrency_balance_default_nosymbol
+        multicurrency_balance_default_formatted
+        multicurrency_balance_default_formatted_nosymbol
+        multicurrency_balance_{currency}
+        multicurrency_balance_{currency}_nosymbol
+        multicurrency_balance_{currency}_formatted
+        multicurrency_balance_{currency}_formatted_nosymbol
+         */
 
         return null; // Placeholder is unknown by the Expansion
     }

@@ -43,7 +43,7 @@ public class Command_Balance extends BaseCommand {
                 ));
                 return;
             }
-            player.sendMessage(Utils.colorize(Messages.BALANCE.get()
+            player.sendMessage(Utils.colorize(Messages.BALANCE.get(account.getBalance(currency))
                     .replace("{prefix}", Messages.PREFIX.get())
                     .replace("{symbol}", currency.getSymbol())
                     .replace("{currency}", account.getBalance(currency) <= 1 ? currency.getSingular() : currency.getPlural())
@@ -60,7 +60,7 @@ public class Command_Balance extends BaseCommand {
                 ));
                 return;
             }
-            player.sendMessage(Utils.colorize(Messages.BALANCE.get()
+            player.sendMessage(Utils.colorize(Messages.BALANCE.get(account.getBalance(currency))
                     .replace("{prefix}", Messages.PREFIX.get())
                     .replace("{symbol}", currency.getSymbol())
                     .replace("{currency}", account.getBalance(currency) <= 1 ? currency.getSingular() : currency.getPlural())
@@ -84,11 +84,11 @@ public class Command_Balance extends BaseCommand {
                 return;
             }
             Account targetAccount = MultiCurrency.getAccountManager().getAccount(target.getUniqueId());
-            player.sendMessage(Utils.colorize(Messages.BALANCE_TARGET.get()
+            player.sendMessage(Utils.colorize(Messages.BALANCE_TARGET.get(targetAccount.getBalance(currency))
                     .replace("{prefix}", Messages.PREFIX.get())
                     .replace("{symbol}", currency.getSymbol())
                     .replace("{currency}", targetAccount.getBalance(currency) <= 1 ? currency.getSingular() : currency.getPlural())
-                    .replace("{amount}", String.valueOf(targetAccount.getBalance(currency)))
+                    .replace("{amount}", String.valueOf(account.getBalance(currency)))
                     .replace("{target}", target.getName())
             ));
         } else if (!player.hasPermission("multicurrency.command.balance") || !player.hasPermission("multicurrency.command.balance.other")) {

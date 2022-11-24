@@ -47,7 +47,7 @@ public class Inventory_EditBalance {
             if (type == InventoryType.SET_BALANCE) {
                 if (text.matches("[0-9]+")) {
                     account.updateBalance(currency, Double.parseDouble(text), true);
-                    target.sendMessage(Utils.colorize(Messages.SET_SUCCESS_TARGET.get()
+                    target.sendMessage(Utils.colorize(Messages.SET_SUCCESS_TARGET.get(Double.parseDouble(text))
                             .replace("{player}", player.getName())
                             .replace("{currency}", currency.getSingular())
                             .replace("{amount}", String.valueOf(Double.parseDouble(text)))
@@ -64,7 +64,7 @@ public class Inventory_EditBalance {
                 if (text.matches("[0-9]+")) {
                     double finalAmount = account.getBalance(currency) + Double.parseDouble(text);
                     account.updateBalance(currency, finalAmount, true);
-                    target.sendMessage(Utils.colorize(Messages.ADD_SUCCESS_TARGET.get()
+                    target.sendMessage(Utils.colorize(Messages.ADD_SUCCESS_TARGET.get(Double.parseDouble(text))
                             .replace("{player}", player.getName())
                             .replace("{currency}", currency.getSingular())
                             .replace("{amount}", String.valueOf(Double.parseDouble(text)))
@@ -88,7 +88,7 @@ public class Inventory_EditBalance {
                     }
                     double finalAmount = account.getBalance(currency) - Double.parseDouble(text);
                     account.updateBalance(currency, finalAmount, true);
-                    target.sendMessage(Utils.colorize(Messages.REMOVE_SUCCESS_TARGET.get()
+                    target.sendMessage(Utils.colorize(Messages.REMOVE_SUCCESS_TARGET.get(Double.parseDouble(text))
                             .replace("{player}", player.getName())
                             .replace("{currency}", currency.getSingular())
                             .replace("{amount}", String.valueOf(Double.parseDouble(text)))

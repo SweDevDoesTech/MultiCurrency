@@ -4,6 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Subcommand;
 import dev.sweplays.multicurrency.MultiCurrency;
 import dev.sweplays.multicurrency.account.Account;
 import dev.sweplays.multicurrency.currency.Currency;
@@ -13,10 +14,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-@CommandAlias("pay")
+@CommandAlias("mc|multicurrency|currency")
 public class Command_Pay extends BaseCommand {
 
     @Default
+    @Subcommand("pay")
     @CommandCompletion("@players|toggle @currencies 0")
     public void onPay(CommandSender sender, String[] args) {
         if (!(sender instanceof Player player)) return;

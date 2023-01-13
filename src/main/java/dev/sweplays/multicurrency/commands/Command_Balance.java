@@ -4,6 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Subcommand;
 import dev.sweplays.multicurrency.MultiCurrency;
 import dev.sweplays.multicurrency.account.Account;
 import dev.sweplays.multicurrency.currency.Currency;
@@ -15,7 +16,7 @@ import org.bukkit.entity.Player;
 
 import java.util.stream.Collectors;
 
-@CommandAlias("balance|bal|money")
+@CommandAlias("mc|multicurrency|currency")
 public class Command_Balance extends BaseCommand {
 
     public Command_Balance() {
@@ -29,6 +30,7 @@ public class Command_Balance extends BaseCommand {
     }
 
     @Default
+    @Subcommand("balance|bal|money")
     @CommandCompletion("@currencies @players")
     public void onBalance(CommandSender sender, String[] args) {
         if (!(sender instanceof Player player)) return;

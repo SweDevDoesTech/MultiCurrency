@@ -59,7 +59,9 @@ public final class MultiCurrency extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        this.saveResource("config.yml", false);
+        File configFile = new File(getDataFolder() + "/config.yml");
+        if (!configFile.exists())
+            this.saveResource("config.yml", false);
 
         commandManager = new BukkitCommandManager(this);
 
@@ -89,7 +91,7 @@ public final class MultiCurrency extends JavaPlugin {
 
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new PlaceholderExpansion(this).register();
-            getLogger().warning("PlaceholderAPI found!");
+            getLogger().info("PlaceholderAPI found!");
         } else {
             getLogger().warning("PlaceholderAPI not found...");
         }

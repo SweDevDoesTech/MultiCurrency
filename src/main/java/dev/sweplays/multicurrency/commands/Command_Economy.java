@@ -17,7 +17,6 @@ import org.bukkit.entity.Player;
 @CommandAlias("mc|multicurrency|currency")
 public class Command_Economy extends BaseCommand {
 
-    @Default
     @Subcommand("eco|economy")
     @CommandCompletion("set|add|remove @players|@currencies @currencies 0")
     public void onEconomy(CommandSender sender, String[] args) {

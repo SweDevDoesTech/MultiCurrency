@@ -17,7 +17,6 @@ import org.bukkit.entity.Player;
 @CommandAlias("mc|multicurrency|currency")
 public class Command_Pay extends BaseCommand {
 
-    @Default
     @Subcommand("pay")
     @CommandCompletion("@players|toggle @currencies 0")
     public void onPay(CommandSender sender, String[] args) {

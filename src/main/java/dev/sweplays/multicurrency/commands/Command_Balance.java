@@ -29,7 +29,6 @@ public class Command_Balance extends BaseCommand {
         });
     }
 
-    @Default
     @Subcommand("balance|bal|money")
     @CommandCompletion("@currencies @players")
     public void onBalance(CommandSender sender, String[] args) {

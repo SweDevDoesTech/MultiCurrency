@@ -7,13 +7,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="MultiCurrency-2" />
-        <module name="MultiCurrency" />
+        <module name="MultiCurrencyModified" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="MultiCurrency" target="16" />
       <module name="MultiCurrency-2" target="16" />
+      <module name="MultiCurrencyModified" target="16" />
     </bytecodeTargetLevel>
   </component>
 </project>

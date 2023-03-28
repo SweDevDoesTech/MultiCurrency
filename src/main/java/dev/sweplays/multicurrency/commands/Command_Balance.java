@@ -32,68 +32,72 @@ public class Command_Balance extends BaseCommand {
     @Subcommand("balance|bal|money")
     @CommandCompletion("@currencies @players")
     public void onBalance(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player player)) return;
+        if (sender instanceof Player player) {
+            Account account = MultiCurrency.getAccountManager().getAccount(player.getUniqueId());
 
-        Account account = MultiCurrency.getAccountManager().getAccount(player.getUniqueId());
-
-        if (args.length == 0 && player.hasPermission("multicurrency.command.balance")) {
-            Currency currency = MultiCurrency.getCurrencyManager().getDefaultCurrency();
-            if (currency == null) {
-                player.sendMessage(Utils.colorize(Messages.NO_DEFAULT_CURRENCY.get()
+            if (args.length == 0 && player.hasPermission("multicurrency.command.balance")) {
+                Currency currency = MultiCurrency.getCurrencyManager().getDefaultCurrency();
+                if (currency == null) {
+                    player.sendMessage(Utils.colorize(Messages.NO_DEFAULT_CURRENCY.get()
+                            .replace("{prefix}", Messages.PREFIX.get())
+                    ));
+                    return;
+                }
+                player.sendMessage(Utils.colorize(Messages.BALANCE.get(account.getBalance(currency))
                         .replace("{prefix}", Messages.PREFIX.get())
+                        .replace("{symbol}", currency.getSymbol())
+                        .replace("{currency}", account.getBalance(currency) <= 1 ? currency.getSingular() : currency.getPlural())
+                        .replace("{amount}", String.valueOf(account.getBalance(currency)))
+                        .replace("{player}", player.getName())
                 ));
-                return;
+
+
+            } else if (args.length == 1 && player.hasPermission("multicurrency.command.balance")) {
+                Currency currency = MultiCurrency.getCurrencyManager().getCurrency(args[0]);
+                if (currency == null) {
+                    player.sendMessage(Utils.colorize(Messages.CURRENCY_NOT_FOUND.get()
+                            .replace("{currency}", args[0])
+                    ));
+                    return;
+                }
+                player.sendMessage(Utils.colorize(Messages.BALANCE.get(account.getBalance(currency))
+                        .replace("{prefix}", Messages.PREFIX.get())
+                        .replace("{symbol}", currency.getSymbol())
+                        .replace("{currency}", account.getBalance(currency) <= 1 ? currency.getSingular() : currency.getPlural())
+                        .replace("{amount}", String.valueOf(account.getBalance(currency)))
+                        .replace("{player}", player.getName())
+                ));
+
             }
-            player.sendMessage(Utils.colorize(Messages.BALANCE.get(account.getBalance(currency))
-                    .replace("{prefix}", Messages.PREFIX.get())
-                    .replace("{symbol}", currency.getSymbol())
-                    .replace("{currency}", account.getBalance(currency) <= 1 ? currency.getSingular() : currency.getPlural())
-                    .replace("{amount}", String.valueOf(account.getBalance(currency)))
-                    .replace("{player}", player.getName())
-            ));
 
+            return;
+        }
 
-        } else if (args.length == 1 && player.hasPermission("multicurrency.command.balance")) {
+        if (args.length == 2 && sender.hasPermission("multicurrency.command.balance.other")) {
             Currency currency = MultiCurrency.getCurrencyManager().getCurrency(args[0]);
             if (currency == null) {
-                player.sendMessage(Utils.colorize(Messages.CURRENCY_NOT_FOUND.get()
-                        .replace("{currency}", args[0])
-                ));
-                return;
-            }
-            player.sendMessage(Utils.colorize(Messages.BALANCE.get(account.getBalance(currency))
-                    .replace("{prefix}", Messages.PREFIX.get())
-                    .replace("{symbol}", currency.getSymbol())
-                    .replace("{currency}", account.getBalance(currency) <= 1 ? currency.getSingular() : currency.getPlural())
-                    .replace("{amount}", String.valueOf(account.getBalance(currency)))
-                    .replace("{player}", player.getName())
-            ));
-
-        } else if (args.length == 2 && player.hasPermission("multicurrency.command.balance.other")) {
-            Currency currency = MultiCurrency.getCurrencyManager().getCurrency(args[0]);
-            if (currency == null) {
-                player.sendMessage(Utils.colorize(Messages.CURRENCY_NOT_FOUND.get()
+                sender.sendMessage(Utils.colorize(Messages.CURRENCY_NOT_FOUND.get()
                         .replace("{currency}", args[0])
                 ));
                 return;
             }
             Player target = Bukkit.getPlayer(args[1]);
             if (target == null) {
-                player.sendMessage(Utils.colorize(Messages.PLAYER_NOT_FOUND.get()
+                sender.sendMessage(Utils.colorize(Messages.PLAYER_NOT_FOUND.get()
                         .replace("{target}", args[1])
                 ));
                 return;
             }
             Account targetAccount = MultiCurrency.getAccountManager().getAccount(target.getUniqueId());
-            player.sendMessage(Utils.colorize(Messages.BALANCE_TARGET.get(targetAccount.getBalance(currency))
+            sender.sendMessage(Utils.colorize(Messages.BALANCE_TARGET.get(targetAccount.getBalance(currency))
                     .replace("{prefix}", Messages.PREFIX.get())
                     .replace("{symbol}", currency.getSymbol())
                     .replace("{currency}", targetAccount.getBalance(currency) <= 1 ? currency.getSingular() : currency.getPlural())
-                    .replace("{amount}", String.valueOf(account.getBalance(currency)))
+                    .replace("{amount}", String.valueOf(targetAccount.getBalance(currency)))
                     .replace("{target}", target.getName())
             ));
-        } else if (!player.hasPermission("multicurrency.command.balance") || !player.hasPermission("multicurrency.command.balance.other")) {
-            player.sendMessage(Utils.colorize(Messages.NO_PERMISSION.get()
+        } else if (!sender.hasPermission("multicurrency.command.balance") || !sender.hasPermission("multicurrency.command.balance.other")) {
+            sender.sendMessage(Utils.colorize(Messages.NO_PERMISSION.get()
                     .replace("{prefix}", Messages.PREFIX.get())
             ));
         }

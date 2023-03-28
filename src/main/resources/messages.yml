@@ -25,9 +25,9 @@ currency:
     success-target: "{prefix} &7{player} &cremoved &7{amount}{symbol} &cof &7{currency} &cfrom your account."
 
   set:
-    success: "{prefix} &aSuccessfully set &7{target}&a's balance of &7{currency} &ato &7{amount}{symbol}&a."
-    success-no-target: "{prefix} &aSuccessfully set your balance of &7{currency} &ato &7{amount}{symbol}&a."
-    success-target: "{prefix} &7{player} &cset your balance of &7{currency} &cto &7{amount}{symbol}&c."
+    success: "{prefix} &7Successfully set &a{target}&7's balance of &a{currency} &7to &a{amount}{symbol}&7."
+    success-no-target: "{prefix} &7Successfully set your balance of &a{currency} &7to &a{amount}{symbol}&7."
+    success-target: "{prefix} &7{player} &7set your balance of &a{currency} &7to &a{amount}{symbol}&7."
 
   pay:
     success: "{prefix} &7{amount}{symbol} &aof {currency} &ahas been sent to &7{target}&a."

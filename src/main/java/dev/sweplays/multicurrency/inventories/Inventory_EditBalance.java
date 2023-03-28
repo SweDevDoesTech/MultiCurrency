@@ -24,16 +24,16 @@ public class Inventory_EditBalance {
         anvilGui = new AnvilGUI.Builder();
         anvilGui.plugin(MultiCurrency.getInstance());
 
-        anvilGui.title("Enter Name");
+        anvilGui.title("Enter Value");
 
         List<String> itemLeftLore = new ArrayList<>();
         itemLeftLore.add("");
-        itemLeftLore.add(Utils.colorize("&7Enter name above."));
+        itemLeftLore.add(Utils.colorize("&7Enter value above."));
         itemLeftLore.add("");
 
         ItemStack itemLeft = new ItemStack(Material.PAPER);
         ItemMeta itemLeftMeta = itemLeft.getItemMeta();
-        itemLeftMeta.setDisplayName(Utils.colorize("&7Enter name"));
+        itemLeftMeta.setDisplayName(Utils.colorize("&7Enter value"));
         itemLeftMeta.setLore(itemLeftLore);
         itemLeft.setItemMeta(itemLeftMeta);
 
@@ -79,7 +79,7 @@ public class Inventory_EditBalance {
                 }
             } else if (type == InventoryType.REMOVE_BALANCE) {
                 if (text.matches("[0-9]+")) {
-                    if (account.getBalance(currency) <= Double.parseDouble(text)) {
+                    if (account.getBalance(currency) < Double.parseDouble(text)) {
                         player.sendMessage(Utils.colorize(Messages.UNDER_ZERO.get()
                                 .replace("{prefix}", Messages.PREFIX.get())
                         ));

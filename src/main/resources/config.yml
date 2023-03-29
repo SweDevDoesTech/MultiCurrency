@@ -1,4 +1,12 @@
 message-options:
+  # Makes so messages like "Saved account: <player>" does not show if it is set to false. (Default: false)
   account-messages: false
+
+  # Makes so messages like "Saved currency: <currency>" does not show if it is set to false. (Default: true)
   currency-messages: true
+
+  # Makes the numbers on placeholders show for example 1m or 10b. (Default: true)
   abbreviated-numbers: true
+
+  # Set this to false if you don't want other players to get a message when an admin does /eco set|add|remove.
+  receiver-eco-messages: true

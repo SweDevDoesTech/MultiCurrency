@@ -142,6 +142,8 @@ public class Command_Economy extends BaseCommand {
                     .replace("{amount}", String.valueOf(Double.parseDouble(args[3])))
                     .replace("{player}", sender.getName())
             ));
+
+            if (!MultiCurrency.getInstance().getConfig().getBoolean("message-options.receiver-eco-messages")) return;
             target.sendMessage(Utils.colorize(Messages.SET_SUCCESS_TARGET.get(Double.parseDouble(args[3]))
                     .replace("{prefix}", Messages.PREFIX.get())
                     .replace("{symbol}", currency.getSymbol())
@@ -186,6 +188,8 @@ public class Command_Economy extends BaseCommand {
                     .replace("{amount}", String.valueOf(Double.parseDouble(args[3])))
                     .replace("{player}", sender.getName())
             ));
+
+            if (!MultiCurrency.getInstance().getConfig().getBoolean("message-options.receiver-eco-messages")) return;
             target.sendMessage(Utils.colorize(Messages.ADD_SUCCESS_TARGET.get(Double.parseDouble(args[3]))
                     .replace("{prefix}", Messages.PREFIX.get())
                     .replace("{symbol}", currency.getSymbol())
@@ -231,6 +235,8 @@ public class Command_Economy extends BaseCommand {
                     .replace("{amount}", String.valueOf(Double.parseDouble(args[3])))
                     .replace("{player}", sender.getName())
             ));
+
+            if (!MultiCurrency.getInstance().getConfig().getBoolean("message-options.receiver-eco-messages")) return;
             target.sendMessage(Utils.colorize(Messages.REMOVE_SUCCESS_TARGET.get(Double.parseDouble(args[3]))
                     .replace("{prefix}", Messages.PREFIX.get())
                     .replace("{symbol}", currency.getSymbol())

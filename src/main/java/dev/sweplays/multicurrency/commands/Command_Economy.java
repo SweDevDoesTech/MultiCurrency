@@ -106,8 +106,6 @@ public class Command_Economy extends BaseCommand {
                         .replace("{player}", player.getName())
                 ));
             }
-
-            return;
         }
 
         if (args.length == 4 && args[0].equalsIgnoreCase("set") && sender.hasPermission("multicurrency.command.economy.set")) {

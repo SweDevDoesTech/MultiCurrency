@@ -23,7 +23,7 @@ public class Command_Balance extends BaseCommand {
         MultiCurrency.getCommandManager().getCommandCompletions().registerAsyncCompletion("currencies", context -> {
             CommandSender sender = context.getSender();
             if (sender instanceof Player Player) {
-                return MultiCurrency.getCurrencyManager().getCurrencies().stream().map(Currency::getSingular).collect(Collectors.toList());
+                return MultiCurrency.getCurrencyManager().getCurrencies().stream().map(Currency::getId).collect(Collectors.toList());
             }
             return null;
         });
@@ -67,10 +67,7 @@ public class Command_Balance extends BaseCommand {
                         .replace("{amount}", String.valueOf(account.getBalance(currency)))
                         .replace("{player}", player.getName())
                 ));
-
             }
-
-            return;
         }
 
         if (args.length == 2 && sender.hasPermission("multicurrency.command.balance.other")) {

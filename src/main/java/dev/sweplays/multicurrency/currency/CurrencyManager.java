@@ -35,7 +35,7 @@ public class CurrencyManager {
 
     public Currency getCurrency(String name) {
         for (Currency currency : currencies) {
-            if (!currency.getSingular().equalsIgnoreCase(name)) continue;
+            if (!currency.getId().equalsIgnoreCase(name)) continue;
             return currency;
         }
         return null;
@@ -70,15 +70,28 @@ public class CurrencyManager {
     }
 
     /**
-     *
-     * @apiNote Only used for creating a currency within the plugin since it does not save after creation.
      * @return The newly created currency.
+     * @apiNote Only used for creating a currency within the plugin since it does not save after creation.
      * @since 1.0.0
      */
     public Currency createNewCurrency(String singular, String plural, String symbol, Double defaultBalance, boolean payable, Material material) {
         if (currencyExists(singular)) return null;
 
         Currency currency = new Currency(UUID.randomUUID(), singular, plural, symbol, defaultBalance, payable, material);
+
+        //String[] words = currency.getSingular().split("\\s+");
+        //if (words.length > 0) {
+
+        String id = currency.getSingular().replace(" ", "-");
+        currency.setId(id);
+
+        /*
+        for (int i = 0; i < words.length; i++) {
+
+        }
+        */
+        //}
+
         if (currencies.size() == 0) {
             currency.setDefault(true);
         }

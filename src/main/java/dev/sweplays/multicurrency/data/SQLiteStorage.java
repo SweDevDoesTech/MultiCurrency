@@ -20,7 +20,7 @@ public class SQLiteStorage extends DataStore {
 
     final DatabaseManager databaseManager = MultiCurrency.getDatabaseManager();
 
-    private final String SAVE_CURRENCY_SQL = "INSERT OR REPLACE INTO currencies (uuid, singular, plural, symbol, defaultBalance, payable, isDefault, material) VALUES (?,?,?,?,?,?,?,?)";
+    private final String SAVE_CURRENCY_SQL = "INSERT OR REPLACE INTO currencies (uuid, singular, plural, symbol, defaultBalance, payable, isDefault, material, id) VALUES (?,?,?,?,?,?,?,?, ?)";
     private final String SAVE_ACCOUNT_SQL = "INSERT OR REPLACE INTO accounts (uuid, name, acceptingPayments, balanceData) VALUES (?,?,?,?)";
 
     public SQLiteStorage() {
@@ -31,7 +31,7 @@ public class SQLiteStorage extends DataStore {
     public void initialize() {
         MultiCurrency.getInstance().getLogger().info("Creating tables in database if they do not exist...");
 
-        databaseManager.execute("CREATE TABLE IF NOT EXISTS currencies (uuid VARCHAR(255) NOT NULL PRIMARY KEY, singular VARCHAR(255), plural VARCHAR(255), symbol VARCHAR(255), defaultBalance DOUBLE, payable BOOLEAN, isDefault BOOLEAN, material VARCHAR(255))");
+        databaseManager.execute("CREATE TABLE IF NOT EXISTS currencies (uuid VARCHAR(255) NOT NULL PRIMARY KEY, singular VARCHAR(255), plural VARCHAR(255), symbol VARCHAR(255), defaultBalance DOUBLE, payable BOOLEAN, isDefault BOOLEAN, material VARCHAR(255), id VARCHAR(255))");
         databaseManager.execute("CREATE TABLE IF NOT EXISTS accounts (uuid VARCHAR(255) NOT NULL PRIMARY KEY, name VARCHAR(255), acceptingPayments BOOLEAN, balanceData LONGTEXT NULL)");
     }
 
@@ -135,12 +135,14 @@ public class SQLiteStorage extends DataStore {
                 boolean payable = resultSet.getBoolean("payable");
                 boolean isDefault = resultSet.getBoolean("isDefault");
                 Material material = Material.valueOf(resultSet.getString("material"));
+                String id = resultSet.getString("id");
                 Currency currency = new Currency(uuid, singular, plural);
                 currency.setSymbol(symbol);
                 currency.setDefaultBalance(defaultBalance);
                 currency.setPayable(payable);
                 currency.setDefault(isDefault);
                 currency.setInventoryMaterial(material);
+                currency.setId(id);
 
                 MultiCurrency.getCurrencyManager().add(currency);
 
@@ -233,6 +235,7 @@ public class SQLiteStorage extends DataStore {
             statement.setBoolean(6, currency.isPayable());
             statement.setBoolean(7, currency.isDefault());
             statement.setString(8, currency.getInventoryMaterial().toString());
+            statement.setString(9, currency.getId());
             statement.execute();
 
             if (MultiCurrency.getInstance().getConfig().getBoolean("message-options.currency-messages"))

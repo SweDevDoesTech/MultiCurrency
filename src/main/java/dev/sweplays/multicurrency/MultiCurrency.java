@@ -26,7 +26,7 @@ import java.io.File;
 
 public final class MultiCurrency extends JavaPlugin {
 
-    public static final String version = "1.0.0";
+    public static final String version = "1.3.4";
 
     @Getter
     private static MultiCurrency instance;

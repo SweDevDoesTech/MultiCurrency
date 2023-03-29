@@ -44,6 +44,10 @@ public class Currency {
     @Setter
     private ChatColor color;
 
+    @Getter
+    @Setter
+    private String id;
+
     public Currency(UUID uuid, String singular, String plural) {
         this.uuid = uuid;
         this.singular = singular;

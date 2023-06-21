@@ -39,9 +39,11 @@ public class Inventory_EditBalance {
 
         anvilGui.itemLeft(itemLeft);
 
-        anvilGui.onComplete((player, text) -> {
+        anvilGui.onClick((slot, stateSnapshot) -> {
             Inventory_UpdatePlayer inventory_updatePlayer = new Inventory_UpdatePlayer(account);
 
+            String text = stateSnapshot.getText();
+            Player player = stateSnapshot.getPlayer();
             Player target = Bukkit.getPlayer(account.getOwnerUuid());
 
             if (type == InventoryType.SET_BALANCE) {
@@ -58,7 +60,7 @@ public class Inventory_EditBalance {
                             .replace("{prefix}", Messages.PREFIX.get())
                     ));
                     anvilGui.open(player);
-                    return AnvilGUI.Response.close();
+                    return List.of(AnvilGUI.ResponseAction.close());
                 }
             } else if (type == InventoryType.ADD_BALANCE) {
                 if (text.matches("[0-9]+")) {
@@ -75,7 +77,7 @@ public class Inventory_EditBalance {
                             .replace("{prefix}", Messages.PREFIX.get())
                     ));
                     anvilGui.open(player);
-                    return AnvilGUI.Response.close();
+                    return List.of(AnvilGUI.ResponseAction.close());
                 }
             } else if (type == InventoryType.REMOVE_BALANCE) {
                 if (text.matches("[0-9]+")) {
@@ -84,7 +86,7 @@ public class Inventory_EditBalance {
                                 .replace("{prefix}", Messages.PREFIX.get())
                         ));
                         anvilGui.open(player);
-                        return AnvilGUI.Response.close();
+                        return List.of(AnvilGUI.ResponseAction.close());
                     }
                     double finalAmount = account.getBalance(currency) - Double.parseDouble(text);
                     account.updateBalance(currency, finalAmount, true);
@@ -99,11 +101,11 @@ public class Inventory_EditBalance {
                             .replace("{prefix}", Messages.PREFIX.get())
                     ));
                     anvilGui.open(player);
-                    return AnvilGUI.Response.close();
+                    return List.of(AnvilGUI.ResponseAction.close());
                 }
             }
             inventory_updatePlayer.openInventory(player);
-            return AnvilGUI.Response.close();
+            return List.of(AnvilGUI.ResponseAction.close());
         });
     }
 

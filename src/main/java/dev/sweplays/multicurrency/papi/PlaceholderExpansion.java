@@ -5,6 +5,7 @@ import dev.sweplays.multicurrency.account.Account;
 import dev.sweplays.multicurrency.currency.Currency;
 import dev.sweplays.multicurrency.utilities.Utils;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class PlaceholderExpansion extends me.clip.placeholderapi.expansion.PlaceholderExpansion {
@@ -75,6 +76,29 @@ public class PlaceholderExpansion extends me.clip.placeholderapi.expansion.Place
 
             String amount = "";
             return amount + Utils.format(account.getBalance(defaultCurrency));
+        } else if (params.equalsIgnoreCase("balance_default_all")) {
+            if (defaultCurrency == null) {
+                return "No default currency found.";
+            }
+
+            StringBuilder amount = new StringBuilder();
+            for (Player player1 : plugin.getServer().getOnlinePlayers()) {
+                Account account1 = MultiCurrency.getAccountManager().getAccount(player1.getUniqueId());
+                amount.append(Math.round(account1.getBalance(defaultCurrency)));
+            }
+            return amount.toString();
+
+        } else if (params.equalsIgnoreCase("balance_default_all_nosymbol")) {
+            if (defaultCurrency == null) {
+                return "No default currency found.";
+            }
+
+            StringBuilder amount = new StringBuilder();
+            for (Player player1 : plugin.getServer().getOnlinePlayers()) {
+                Account account1 = MultiCurrency.getAccountManager().getAccount(player1.getUniqueId());
+                amount.append(Math.round(account1.getBalance(defaultCurrency)));
+            }
+            return defaultCurrency.getSymbol() + amount;
 
         } else if (params.startsWith("balance_") || !params.startsWith("balance_default")) {
             String[] currencyArray = params.split("_");
@@ -96,6 +120,22 @@ public class PlaceholderExpansion extends me.clip.placeholderapi.expansion.Place
             } else if (params.equalsIgnoreCase("balance_" + currency.getSingular() + "_nosymbol")) {
                 String amount = "";
                 return amount + Math.round(account.getBalance(currency));
+            } else if (params.equalsIgnoreCase("all_" + currency.getSingular())) {
+                StringBuilder amount = new StringBuilder();
+                for (Player player1 : plugin.getServer().getOnlinePlayers()) {
+                    Account account1 = MultiCurrency.getAccountManager().getAccount(player1.getUniqueId());
+                    amount.append(Math.round(account1.getBalance(currency)));
+                }
+                return amount.toString();
+
+            } else if (params.equalsIgnoreCase("all_" + currency.getSingular() + "_nosymbol")) {
+                StringBuilder amount = new StringBuilder();
+                for (Player player1 : plugin.getServer().getOnlinePlayers()) {
+                    Account account1 = MultiCurrency.getAccountManager().getAccount(player1.getUniqueId());
+                    amount.append(Math.round(account1.getBalance(currency)));
+                }
+                return currency.getSymbol() + amount;
+
             }
         }
         /*

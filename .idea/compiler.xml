@@ -13,7 +13,6 @@
     <bytecodeTargetLevel>
       <module name="MultiCurrency" target="16" />
       <module name="MultiCurrency-2" target="16" />
-      <module name="MultiCurrencyModified" target="16" />
     </bytecodeTargetLevel>
   </component>
 </project>

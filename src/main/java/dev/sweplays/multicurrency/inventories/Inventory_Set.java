@@ -57,13 +57,18 @@ public class Inventory_Set {
 
         anvilGui.itemLeft(itemLeft);
 
-        anvilGui.onComplete((player, text) -> {
-            Inventory_CreateCurrency inventory_createCurrency = new Inventory_CreateCurrency(player);
+        anvilGui.onClick((slot, stateSnapshot) -> {
+            if (slot != AnvilGUI.Slot.OUTPUT) {
+                return List.of(AnvilGUI.ResponseAction.close());
+            }
+
+            Player player = stateSnapshot.getPlayer();
+            String text = stateSnapshot.getText();
 
             if (type == InventoryType.SET_SINGULAR) {
                 MultiCurrency.getInventoryCache().getCurrencySingular().put(player, text);
                 new Inventory_Set(InventoryType.SET_PLURAL).openInventory(player);
-                return AnvilGUI.Response.close();
+                return List.of(AnvilGUI.ResponseAction.close());
 
             } else if (type == InventoryType.SET_PLURAL) {
                 MultiCurrency.getInventoryCache().getCurrencyPlural().put(player, text);
@@ -76,14 +81,16 @@ public class Inventory_Set {
                             .replace("{prefix}", Messages.PREFIX.get())
                     ));
                     anvilGui.open(player);
-                    return AnvilGUI.Response.close();
+                    return List.of(AnvilGUI.ResponseAction.close());
                 }
             } else if (type == InventoryType.SET_SYMBOL) {
                 MultiCurrency.getInventoryCache().getSymbol().put(player, text);
             }
+            Inventory_CreateCurrency inventory_createCurrency = new Inventory_CreateCurrency(player);
             inventory_createCurrency.openInventory(player);
             inventory_createCurrency.updateCreationLore();
-            return AnvilGUI.Response.close();
+
+            return List.of(AnvilGUI.ResponseAction.close());
         });
     }
 

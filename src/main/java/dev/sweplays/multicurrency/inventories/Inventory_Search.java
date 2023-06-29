@@ -37,14 +37,21 @@ public class Inventory_Search {
 
         anvilGui.itemLeft(itemLeft);
 
-        anvilGui.onComplete((player, text) -> {
+        anvilGui.onClick((slot, stateSnapshot) -> {
+            if (slot != AnvilGUI.Slot.OUTPUT) {
+                return List.of(AnvilGUI.ResponseAction.close());
+            }
+
+            String text = stateSnapshot.getText();
+            Player player = stateSnapshot.getPlayer();
             Player target = Bukkit.getPlayer(text);
+
             if (target == null) {
                 player.sendMessage(Utils.colorize(Messages.PLAYER_NOT_FOUND.get()
                         .replace("{target}", text)
                 ));
                 anvilGui.open(player);
-                return AnvilGUI.Response.close();
+                return List.of(AnvilGUI.ResponseAction.close());
             }
 
             Account account = MultiCurrency.getAccountManager().getAccount(target.getUniqueId());
@@ -52,7 +59,7 @@ public class Inventory_Search {
             if (account != null) {
                 new Inventory_UpdatePlayer(account).openInventory(player);
             }
-            return AnvilGUI.Response.close();
+            return List.of(AnvilGUI.ResponseAction.close());
         });
     }
 

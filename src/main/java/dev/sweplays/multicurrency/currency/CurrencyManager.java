@@ -27,16 +27,16 @@ public class CurrencyManager {
 
     public Currency getCurrency(UUID uuid) {
         for (Currency currency : currencies) {
-            if (!currency.getUuid().equals(uuid)) continue;
-            return currency;
+            if (currency.getUuid().equals(uuid))
+                return currency;
         }
         return null;
     }
 
     public Currency getCurrency(String name) {
         for (Currency currency : currencies) {
-            if (!currency.getId().equalsIgnoreCase(name)) continue;
-            return currency;
+            if (currency.getId().equalsIgnoreCase(name))
+                return currency;
         }
         return null;
     }

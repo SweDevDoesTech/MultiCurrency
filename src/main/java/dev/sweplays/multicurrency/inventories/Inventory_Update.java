@@ -52,22 +52,27 @@ public class Inventory_Update {
 
         anvilGui.itemLeft(itemLeft);
 
-        anvilGui.onComplete((player, text) -> {
-            Inventory_UpdateCurrency inventory_updateCurrency = new Inventory_UpdateCurrency(currency);
+        anvilGui.onClick((slot, stateSnapshot) -> {
+            if (slot != AnvilGUI.Slot.OUTPUT) {
+                return List.of(AnvilGUI.ResponseAction.close());
+            }
+
+            Player player = stateSnapshot.getPlayer();
+            String text = stateSnapshot.getText();
 
             for (Currency currency1 : MultiCurrency.getCurrencyManager().getCurrencies()) {
                 if (currency1.getSingular().equals(text)) {
                     player.sendMessage(Utils.colorize(Messages.CREATE_ERROR.get()
                             .replace("{prefix}", Messages.PREFIX.get())
                     ));
-                    return AnvilGUI.Response.openInventory(anvilGui.open(player).getInventory());
+                    return List.of(AnvilGUI.ResponseAction.openInventory(anvilGui.open(player).getInventory()));
                 }
             }
 
             if (type == InventoryType.UPDATE_SINGULAR) {
                 currency.setSingular(text);
                 new Inventory_Update(currency, InventoryType.UPDATE_PLURAL).openInventory(player);
-                return AnvilGUI.Response.close();
+                return List.of(AnvilGUI.ResponseAction.close());
 
             } else if (type == InventoryType.UPDATE_PLURAL) {
                 currency.setPlural(text);
@@ -80,13 +85,15 @@ public class Inventory_Update {
                             .replace("{prefix}", Messages.PREFIX.get())
                     ));
                     anvilGui.open(player);
-                    return AnvilGUI.Response.close();
+                    return List.of(AnvilGUI.ResponseAction.close());
                 }
             } else if (type == InventoryType.UPDATE_SYMBOL) {
                 currency.setSymbol(text);
             }
+            Inventory_UpdateCurrency inventory_updateCurrency = new Inventory_UpdateCurrency(currency);
             inventory_updateCurrency.openInventory(player);
-            return AnvilGUI.Response.close();
+
+            return List.of(AnvilGUI.ResponseAction.close());
         });
     }
 
